@@ -1,27 +1,16 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org/'
-        }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'org.parchmentmc', name: 'librarian', version: '1.+'
-    }
+plugins {
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
-apply plugin: 'java'
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
+version = version
+group = group
 archivesBaseName = "${mod_id}-forge"
 
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_mc_version}-${parchment_version}-${minecraft_version}"
+    mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
 
     if (project.hasProperty('forge_ats_enabled') && project.findProperty('forge_ats_enabled').toBoolean()) {
         // This location is hardcoded in Forge and can not be changed.
@@ -40,7 +29,7 @@ minecraft {
             mods {
                 modClientRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
+                    source project(":Common").sourceSets.main
                 }
             }
         }
@@ -54,7 +43,7 @@ minecraft {
             mods {
                 modServerRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
+                    source project(":Common").sourceSets.main
                 }
             }
         }
@@ -69,7 +58,7 @@ minecraft {
             mods {
                 modDataRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
+                    source project(":Common").sourceSets.main
                 }
             }
         }
@@ -80,35 +69,31 @@ sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly project(":common")
+    compileOnly project(":Common")
 }
 
 tasks.withType(JavaCompile) {
-    source(project(":common").sourceSets.main.allSource)
+    source(project(":Common").sourceSets.main.allSource)
 }
 
-def replaceResources = tasks.register("replaceResources", Copy) {
-    it.outputs.upToDateWhen { false }
+def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
 
-    it.from(sourceSets.main.resources) {
-        include "META-INF/mods.toml"
-        expand 'version': version, 'forge_mc_version_range': forge_mc_version_range, 'forge_version_range': forge_version_range,
-                'license': license, 'mod_id': mod_id, 'mod_author': mod_author, 'mod_description': mod_description,
-                'mod_name': mod_name
-    }
-    it.from(project(":common").sourceSets.main.resources) {
-        include "pack.mcmeta"
-        expand 'mod_name': mod_name
-    }
-    it.into "$buildDir/resources/main/"
-}
+def replaceProperties = [
+    'version': version, 'forge_mc_version_range': forge_mc_version_range,
+    'forge_version_range': forge_version_range, 'license': license, 'mod_id': mod_id,
+    'mod_author': mod_author, 'mod_description': mod_description, 'mod_name': mod_name,
+    'issue_tracker': issue_tracker, 'mod_credits': mod_credits
+]
 
 processResources {
-    from project(":common").sourceSets.main.resources
+    from project(":Common").sourceSets.main.resources
     duplicatesStrategy(DuplicatesStrategy.FAIL)
-    exclude('META-INF/mods.toml')
-    exclude('pack.mcmeta')
-    configure { finalizedBy(replaceResources) }
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(resourceTargets) {
+        expand replaceProperties
+    }
 }
 
 jar.finalizedBy('reobfJar')
@@ -120,8 +105,6 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             artifact jar
-            artifact sourcesJar
-            artifact javadocJar
         }
     }
     repositories {
