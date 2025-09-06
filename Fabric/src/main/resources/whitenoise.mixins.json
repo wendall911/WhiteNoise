@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "technology.roughness.whitenoise.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "WhiteNoiseMixinLevelResource"
+  ],
+  "client": [
+    "WhiteNoiseMixinMinecraft"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+  
