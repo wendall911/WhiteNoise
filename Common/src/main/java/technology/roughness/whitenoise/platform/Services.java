@@ -31,3 +31,4 @@ public class Services extends ServicesBase {
     public static final IPlatform PLATFORM = load(WhiteNoise.LOGGER, IPlatform.class);
 
 }
+
