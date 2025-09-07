@@ -90,7 +90,8 @@ processResources {
     duplicatesStrategy(DuplicatesStrategy.FAIL)
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
-
+    exclude('META-INF/mods.toml')
+    exclude('pack.mcmeta')
     filesMatching(resourceTargets) {
         expand replaceProperties
     }
