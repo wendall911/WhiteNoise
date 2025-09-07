@@ -54,7 +54,7 @@ import com.google.common.collect.ObjectArrays;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import technology.roughness.whitenoise.WhiteNoiseConstants;
+import technology.roughness.whitenoise.WhiteNoise;
 
 import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.ADD;
 import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.REMOVE;
@@ -115,12 +115,12 @@ public class WhiteNoiseConfigSpec {
                             configData.toString();
 
             if (shouldLog) {
-                WhiteNoiseConstants.LOG.warn(CONFIG, "Configuration file {} is not correct. Correcting",
+                WhiteNoise.LOGGER.warn(CONFIG, "Configuration file {} is not correct. Correcting",
                         configName);
             }
             correct(configData, (action, path, incorrectValue, correctedValue) -> {
                     if (shouldLog) {
-                        WhiteNoiseConstants.LOG.warn(CONFIG,
+                        WhiteNoise.LOGGER.warn(CONFIG,
                             "Incorrect key {} was corrected from {} to its default, {}. {}",
                             DOT_JOINER.join(path), incorrectValue, correctedValue,
                             incorrectValue == correctedValue ? "This seems to be an error." : "");
@@ -128,7 +128,7 @@ public class WhiteNoiseConfigSpec {
                 },
                 (action, path, incorrectValue, correctedValue) -> {
                     if (shouldLog) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                             "The comment on key {} does not match the spec. This may create a backup.",
                             DOT_JOINER.join(path));
                     }
@@ -499,7 +499,7 @@ public class WhiteNoiseConfigSpec {
                 @Override
                 public Object correct(Object value) {
                     if (!(value instanceof List) || ((List<?>) value).isEmpty()) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                             "List on key {} is deemed to need correction. It is null, not a list, or an empty list. Modders, consider defineListAllowEmpty?",
                             path.get(path.size() - 1));
 
@@ -510,7 +510,7 @@ public class WhiteNoiseConfigSpec {
                     list.removeIf(elementValidator.negate());
 
                     if (list.isEmpty()) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                             "List on key {} is deemed to need correction. It failed validation.",
                             path.get(path.size() - 1));
 
@@ -532,7 +532,7 @@ public class WhiteNoiseConfigSpec {
                 @Override
                 public Object correct(Object value) {
                     if (!(value instanceof List)) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                                 "List on key {} is deemed to need correction, as it is null or not a list.",
                                 path.get(path.size() - 1));
                         return getDefault();
@@ -542,7 +542,7 @@ public class WhiteNoiseConfigSpec {
                     list.removeIf(elementValidator.negate());
 
                     if (list.isEmpty()) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                                 "List on key {} is deemed to need correction. It failed validation.",
                                 path.get(path.size() - 1));
                         return getDefault();
@@ -581,7 +581,7 @@ public class WhiteNoiseConfigSpec {
                 @Override
                 public Object correct(Object value) {
                     if (!(value instanceof List) || ((List<?>) value).isEmpty()) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                             "List on key {} is deemed to need correction. It is null, not a list, or an empty list. Modders, consider defineListAllowEmpty?",
                             path.get(path.size() - 1));
 
@@ -592,7 +592,7 @@ public class WhiteNoiseConfigSpec {
                     list.removeIf(elementValidator.negate());
 
                     if (list.isEmpty()) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                             "List on key {} is deemed to need correction. It failed validation.",
                             path.get(path.size() - 1));
 
@@ -614,7 +614,7 @@ public class WhiteNoiseConfigSpec {
                 @Override
                 public Object correct(Object value) {
                     if (!(value instanceof List)) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                             "List on key {} is deemed to need correction, as it is null or not a list.",
                             path.get(path.size() - 1));
 
@@ -625,7 +625,7 @@ public class WhiteNoiseConfigSpec {
                     list.removeIf(elementValidator.negate());
 
                     if (list.isEmpty()) {
-                        WhiteNoiseConstants.LOG.debug(CONFIG,
+                        WhiteNoise.LOGGER.debug(CONFIG,
                             "List on key {} is deemed to need correction. It failed validation.",
                             path.get(path.size() - 1));
 
@@ -948,7 +948,7 @@ public class WhiteNoiseConfigSpec {
         private void checkComment(List<String> path) {
             if (hasInvalidComment) {
                 hasInvalidComment = false;
-                WhiteNoiseConstants.LOG.error(CONFIG,
+                WhiteNoise.LOGGER.error(CONFIG,
                         "Null comment for config option {}, this is invalid and may be disallowed in the future.",
                         DOT_JOINER.join(path));
             }
@@ -1083,7 +1083,7 @@ public class WhiteNoiseConfigSpec {
                         n.doubleValue() <= ((Number) max).doubleValue();
 
                 if (!result) {
-                    WhiteNoiseConstants.LOG.debug(CONFIG, "Range value {} is not within its bounds {}-{}",
+                    WhiteNoise.LOGGER.debug(CONFIG, "Range value {} is not within its bounds {}-{}",
                             n.doubleValue(),
                             ((Number) min).doubleValue(), ((Number) max).doubleValue());
                 }
@@ -1100,7 +1100,7 @@ public class WhiteNoiseConfigSpec {
             boolean result = c.compareTo(min) >= 0 && c.compareTo(max) <= 0;
 
             if (!result) {
-                WhiteNoiseConstants.LOG.debug(CONFIG, "Range value {} is not within its bounds {}-{}", c, min,
+                WhiteNoise.LOGGER.debug(CONFIG, "Range value {} is not within its bounds {}-{}", c, min,
                         max);
             }
 

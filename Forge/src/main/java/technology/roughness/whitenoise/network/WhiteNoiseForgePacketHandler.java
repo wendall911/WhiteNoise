@@ -19,12 +19,10 @@
 
 package technology.roughness.whitenoise.network;
 
-import net.minecraft.resources.ResourceLocation;
-
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-import technology.roughness.whitenoise.WhiteNoiseConstants;
+import technology.roughness.whitenoise.WhiteNoise;
 
 import static technology.roughness.whitenoise.util.ResourceLocationHelper.loc;
 
@@ -33,7 +31,7 @@ public class WhiteNoiseForgePacketHandler {
     private static final String PROTOCOL_VERSION = "1";
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-        loc(WhiteNoiseConstants.MOD_ID, "main"), () -> PROTOCOL_VERSION,
+        loc(WhiteNoise.MODID, "main"), () -> PROTOCOL_VERSION,
         (version) -> true, (version) -> true
     );
 

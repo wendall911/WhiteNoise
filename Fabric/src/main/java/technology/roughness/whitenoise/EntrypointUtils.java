@@ -17,7 +17,7 @@ public class EntrypointUtils {
         Collection<EntrypointContainer<T>>
                 entrypoints = FabricLoader.getInstance().getEntrypointContainers(key, type);
 
-        WhiteNoiseConstants.LOG.debug("Iterating over entrypoint {}", key);
+        WhiteNoise.LOGGER.debug("Iterating over entrypoint {}", key);
 
         for (EntrypointContainer<T> container : entrypoints) {
             try {

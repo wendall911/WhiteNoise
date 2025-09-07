@@ -47,7 +47,7 @@ import net.minecraft.server.MinecraftServer;
 
 import org.apache.commons.io.FilenameUtils;
 
-import technology.roughness.whitenoise.WhiteNoiseConstants;
+import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.platform.Services;
 
 import static technology.roughness.whitenoise.config.WhiteNoiseConfigLoader.CONFIG;
@@ -74,7 +74,7 @@ public class WhiteNoiseConfigTracker {
             return;
         }
         if (this.files.containsKey(config.getFileName())) {
-            WhiteNoiseConstants.LOG.error(CONFIG, "Detected config file conflict {} between {} and {}",
+            WhiteNoise.LOGGER.error(CONFIG, "Detected config file conflict {} between {} and {}",
                     config.getFileName(), this.files.get(config.getFileName()).getModId(), config.getModId());
             throw new RuntimeException("Conflicting config files");
         }
@@ -83,14 +83,14 @@ public class WhiteNoiseConfigTracker {
         this.configsByMod.computeIfAbsent(config.getModId(),
                 (k) -> new EnumMap<>(WhiteNoiseConfig.Type.class)).computeIfAbsent(config.getType(),
                 (k) -> Collections.synchronizedSet(new LinkedHashSet<>())).add(config);
-        WhiteNoiseConstants.LOG.debug(CONFIG, "Config file {} for {} added to tracking",
+        WhiteNoise.LOGGER.debug(CONFIG, "Config file {} for {} added to tracking",
                 config.getFileName(), config.getModId());
     }
 
     void loadDefaultConfigs() {
-        WhiteNoiseConstants.LOG.debug(CONFIG, "Loading default configs");
+        WhiteNoise.LOGGER.debug(CONFIG, "Loading default configs");
         this.files.values().forEach(config -> {
-            WhiteNoiseConstants.LOG.trace(CONFIG, "Loading config file type {} at {} for {}",
+            WhiteNoise.LOGGER.trace(CONFIG, "Loading config file type {} at {} for {}",
                     config.getType(), config.getFileName(), config.getModId());
             boolean alreadyExists =
                     Files.exists(Services.CONFIG.getDefaultConfigPath().resolve(config.getFileName()));
@@ -112,11 +112,11 @@ public class WhiteNoiseConfigTracker {
             }
             catch (IOException e) {
                 if (e instanceof FileAlreadyExistsException) {
-                    WhiteNoiseConstants.LOG.error(WhiteNoiseConfigLoader.CONFIG,
+                    WhiteNoise.LOGGER.error(WhiteNoiseConfigLoader.CONFIG,
                             "Failed to create {} directory due to an intervening file", path);
                 }
                 else {
-                    WhiteNoiseConstants.LOG.error(WhiteNoiseConfigLoader.CONFIG,
+                    WhiteNoise.LOGGER.error(WhiteNoiseConfigLoader.CONFIG,
                             "Failed to create {} directory due to an unknown error", path, e);
                 }
 
@@ -124,17 +124,17 @@ public class WhiteNoiseConfigTracker {
             }
         }
         else {
-            WhiteNoiseConstants.LOG.debug(WhiteNoiseConfigLoader.CONFIG, "Found existing directory : {}", path);
+            WhiteNoise.LOGGER.debug(WhiteNoiseConfigLoader.CONFIG, "Found existing directory : {}", path);
         }
 
         WhiteNoiseConfig.InstanceType type = WhiteNoiseConfig.InstanceType.LOCAL;
-        WhiteNoiseConstants.LOG.debug(CONFIG, "Loading {} configs from {}", type.id(), path);
+        WhiteNoise.LOGGER.debug(CONFIG, "Loading {} configs from {}", type.id(), path);
 
         this.files.values().forEach(config -> {
             Path configPath = path.resolve(config.getFileName());
 
             if (Files.exists(configPath)) {
-                WhiteNoiseConstants.LOG.trace(CONFIG, "Loading config file type {} at {} from {} for {}",
+                WhiteNoise.LOGGER.trace(CONFIG, "Loading config file type {} at {} from {} for {}",
                         config.getType(), config.getFileName(), path, config.getModId());
                 final CommentedFileConfig configData = read(path).apply(config);
                 config.setConfigData(type, configData, false);
@@ -148,7 +148,7 @@ public class WhiteNoiseConfigTracker {
         Path configDir = Services.CONFIG.getServerConfigPath(server);
         WhiteNoiseConfig.InstanceType type = WhiteNoiseConfig.InstanceType.SERVER;
 
-        WhiteNoiseConstants.LOG.debug(CONFIG, "Loading {} configs from {}", type.id(), configDir);
+        WhiteNoise.LOGGER.debug(CONFIG, "Loading {} configs from {}", type.id(), configDir);
 
         this.files.values().forEach(config -> {
             Path dir = null;
@@ -176,7 +176,7 @@ public class WhiteNoiseConfigTracker {
             }
 
             if (dir != null) {
-                WhiteNoiseConstants.LOG.trace(CONFIG, "Loading config file type {} at {} from {} for {}",
+                WhiteNoise.LOGGER.trace(CONFIG, "Loading config file type {} at {} from {} for {}",
                         config.getType(), config.getFileName(), dir, config.getModId());
                 final CommentedFileConfig configData = read(dir).apply(config);
 
@@ -188,10 +188,10 @@ public class WhiteNoiseConfigTracker {
     }
 
     void unloadServerConfigs() {
-        WhiteNoiseConstants.LOG.debug(CONFIG, "Unloading server configs");
+        WhiteNoise.LOGGER.debug(CONFIG, "Unloading server configs");
 
         this.files.values().forEach(config -> {
-            WhiteNoiseConstants.LOG.trace(CONFIG, "Unloading config file type {} at {}", config.getType(),
+            WhiteNoise.LOGGER.trace(CONFIG, "Unloading config file type {} at {}", config.getType(),
                     config.getFileName());
             config.save(WhiteNoiseConfig.InstanceType.SERVER);
             config.clearServerConfigData();
@@ -206,7 +206,7 @@ public class WhiteNoiseConfigTracker {
             try {
                 Path path = configData.getNioPath();
 
-                WhiteNoiseConstants.LOG.warn(CONFIG,
+                WhiteNoise.LOGGER.warn(CONFIG,
                         "Configuration file {} could not be parsed. Creating backup file and correcting", path);
 
                 if (Files.exists(path)) {
@@ -236,7 +236,7 @@ public class WhiteNoiseConfigTracker {
             Files.copy(commentedFileConfig, backup);
         }
         catch (IOException exception) {
-            WhiteNoiseConstants.LOG.warn(CONFIG, "Failed to create backup file for {}", commentedFileConfig,
+            WhiteNoise.LOGGER.warn(CONFIG, "Failed to create backup file for {}", commentedFileConfig,
                     exception);
         }
     }
@@ -254,11 +254,11 @@ public class WhiteNoiseConfigTracker {
                     this.defaultConfigs.put(fileName.intern(), ImmutableMap.copyOf(values));
                 }
 
-                WhiteNoiseConstants.LOG.info(CONFIG, "Loaded default config values from file at path {}",
+                WhiteNoise.LOGGER.info(CONFIG, "Loaded default config values from file at path {}",
                         path);
             }
             catch (Exception e) {
-                WhiteNoiseConstants.LOG.error(CONFIG,
+                WhiteNoise.LOGGER.error(CONFIG,
                         "Error loading default config values from file at path {}", path);
                 e.printStackTrace();
             }
@@ -276,18 +276,18 @@ public class WhiteNoiseConfigTracker {
                             writingMode(WritingMode.REPLACE).
                             build();
 
-            WhiteNoiseConstants.LOG.debug(CONFIG, "Built TOML config for {}", configPath);
+            WhiteNoise.LOGGER.debug(CONFIG, "Built TOML config for {}", configPath);
 
             try {
                 tryConfigFileLoad(configData);
             }
             catch (ParsingException ex) {
-                WhiteNoiseConstants.LOG.error(CONFIG, "Error loading TOML config for {}", configPath);
+                WhiteNoise.LOGGER.error(CONFIG, "Error loading TOML config for {}", configPath);
                 throw new ConfigLoadingException(config, ex);
             }
 
             this.tryDefaultConfigLoad(config);
-            WhiteNoiseConstants.LOG.debug(CONFIG, "Loaded TOML config file {}", configPath);
+            WhiteNoise.LOGGER.debug(CONFIG, "Loaded TOML config file {}", configPath);
 
             return configData;
         };
@@ -298,7 +298,7 @@ public class WhiteNoiseConfigTracker {
         Path p = Services.CONFIG.getBackwardsCompatiblePath().resolve(path.getFileName());
 
         if (Files.exists(p)) {
-            WhiteNoiseConstants.LOG.info(CONFIG, "Loading default config file from path {}", p);
+            WhiteNoise.LOGGER.info(CONFIG, "Loading default config file from path {}", p);
             Files.copy(p, path);
         }
         else {

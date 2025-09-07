@@ -30,7 +30,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 
-import technology.roughness.whitenoise.WhiteNoiseConstants;
+import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.mixin.WhiteNoiseMixinLevelResource;
 import technology.roughness.whitenoise.platform.services.IConfigHelper;
 
@@ -68,7 +68,7 @@ public class FabricConfigHelper implements IConfigHelper {
                 Files.createDirectory(serverConfig);
             }
             catch (IOException e) {
-                WhiteNoiseConstants.LOG.error("Could not create serverconfig directory!");
+                WhiteNoise.LOGGER.error("Could not create serverconfig directory!");
                 e.printStackTrace();
             }
         }

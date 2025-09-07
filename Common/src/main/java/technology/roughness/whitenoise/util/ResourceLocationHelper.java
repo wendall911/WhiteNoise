@@ -9,5 +9,10 @@ public class ResourceLocationHelper {
         return new ResourceLocation(modid, path);
     }
 
+    @SuppressWarnings("removal")
+    public static ResourceLocation mcLoc(String path) {
+        return new ResourceLocation(path);
+    }
+
 }
 

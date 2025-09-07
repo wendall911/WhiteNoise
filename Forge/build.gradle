@@ -103,7 +103,8 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            from components.java
+            // This gives us the built obfuscated version Forge requires
+            artifact jar
         }
     }
     repositories {

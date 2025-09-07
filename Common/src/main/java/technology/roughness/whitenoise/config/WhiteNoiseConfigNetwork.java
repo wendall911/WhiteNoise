@@ -28,8 +28,6 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 
-import technology.roughness.whitenoise.WhiteNoiseConstants;
-
 public class WhiteNoiseConfigNetwork {
 
     public static List<FriendlyByteBuf> getConfigSync() {

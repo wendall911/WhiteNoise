@@ -39,7 +39,7 @@ import technology.roughness.whitenoise.config.WhiteNoiseConfigNetwork;
 public class WhiteNoiseFabric implements ModInitializer, DedicatedServerModInitializer {
 
     public static final ResourceLocation CONFIG_SYNC =
-            new ResourceLocation(WhiteNoiseConstants.MOD_ID, "config_sync");
+            new ResourceLocation(WhiteNoise.MODID, "config_sync");
 
     @Override
     public void onInitialize() {

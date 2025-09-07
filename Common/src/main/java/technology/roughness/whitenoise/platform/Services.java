@@ -19,24 +19,15 @@
 
 package technology.roughness.whitenoise.platform;
 
-import java.util.ServiceLoader;
-
-import technology.roughness.whitenoise.WhiteNoiseConstants;
+import technology.roughness.whitenoise.WhiteNoise;
+import technology.roughness.whitenoise.platform.services.IClientPlatform;
 import technology.roughness.whitenoise.platform.services.IConfigHelper;
+import technology.roughness.whitenoise.platform.services.IPlatform;
 
-public class Services {
+public class Services extends ServicesBase {
 
-    public static final IConfigHelper CONFIG = load(IConfigHelper.class);
-
-    public static <T> T load(Class<T> clazz) {
-        final T loadedService = ServiceLoader.load(clazz)
-                .findFirst()
-                .orElseThrow(
-                        () -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        WhiteNoiseConstants.LOG.debug("Loaded {} for service {}", loadedService, clazz);
-
-        return loadedService;
-    }
+    public static final IConfigHelper CONFIG = load(WhiteNoise.LOGGER, IConfigHelper.class);
+    public static final IClientPlatform CLIENT_PLATFORM = load(WhiteNoise.LOGGER, IClientPlatform.class);
+    public static final IPlatform PLATFORM = load(WhiteNoise.LOGGER, IPlatform.class);
 
 }
-

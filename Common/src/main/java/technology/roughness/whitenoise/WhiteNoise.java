@@ -22,11 +22,11 @@ package technology.roughness.whitenoise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WhiteNoiseConstants {
+public class WhiteNoise {
 
-    public static final String MOD_ID = "whitenoise";
+    public static final String MODID = "whitenoise";
     public static final String MOD_NAME = "WhiteNoise";
-    public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
 }
 

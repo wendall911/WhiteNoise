@@ -23,11 +23,8 @@ import io.netty.buffer.Unpooled;
 
 import java.util.List;
 
-import io.netty.buffer.Unpooled;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -46,7 +43,7 @@ import technology.roughness.whitenoise.config.WhiteNoiseConfigNetwork;
 import technology.roughness.whitenoise.network.ConfigSyncPacket;
 import technology.roughness.whitenoise.network.WhiteNoiseForgePacketHandler;
 
-@Mod(WhiteNoiseConstants.MOD_ID)
+@Mod(WhiteNoise.MODID)
 public class WhiteNoiseForge {
 
     public WhiteNoiseForge() {
@@ -81,9 +78,7 @@ public class WhiteNoiseForge {
     }
 
     private void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent evt) {
-        Player player = (Player) evt.getEntity();
-
-        if (player instanceof ServerPlayer serverPlayer) {
+        if (evt.getEntity() instanceof ServerPlayer serverPlayer) {
             List<FriendlyByteBuf> configData = WhiteNoiseConfigNetwork.getConfigSync();
 
             if (!configData.isEmpty()) {
