@@ -30,10 +30,8 @@ public class WhiteNoisePreLaunchFabric implements PreLaunchEntrypoint {
 
     @Override
     public void onPreLaunch() {
-        FabricLoader loader = FabricLoader.getInstance();
-
-        if (loader.getEnvironmentType() == EnvType.SERVER) {
-            loader.invokeEntrypoints("whitenoise", WhiteNoiseConfigInitializer.class,
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            EntrypointUtils.invokeEntrypoints("whitenoise", WhiteNoiseConfigInitializer.class,
                     WhiteNoiseConfigInitializer::onInitializeConfig);
             WhiteNoiseConfigEvents.onLoadDefaultAndLocal();
         }

@@ -2,7 +2,8 @@ modLoader="javafml"
 loaderVersion="${forge_version_range}"
 license="${license}"
 issueTrackerURL="${issue_tracker}"
-
+logoFile="${mod_id}_icon.png"
+logoBlur=false
 [[mods]]
     modId="${mod_id}"
     version="${version}"
@@ -12,6 +13,7 @@ issueTrackerURL="${issue_tracker}"
     description='''
     ${mod_description}
     '''
+    displayURL="${source}"
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true

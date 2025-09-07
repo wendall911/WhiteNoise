@@ -23,8 +23,11 @@ import io.netty.buffer.Unpooled;
 
 import java.util.List;
 
+import io.netty.buffer.Unpooled;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -78,20 +81,18 @@ public class WhiteNoiseForge {
     }
 
     private void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent evt) {
-        if (evt.getEntity() instanceof ServerPlayer serverPlayer) {
+        Player player = (Player) evt.getEntity();
+
+        if (player instanceof ServerPlayer serverPlayer) {
             List<FriendlyByteBuf> configData = WhiteNoiseConfigNetwork.getConfigSync();
 
             if (!configData.isEmpty()) {
                 for (FriendlyByteBuf configDatum : configData) {
-                    WhiteNoiseForgePacketHandler.INSTANCE.send(
-                        PacketDistributor.PLAYER.with(() -> serverPlayer),
-                        new ConfigSyncPacket(configDatum)
-                    );
+                    WhiteNoiseForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+                            new ConfigSyncPacket(configDatum));
                 }
-                WhiteNoiseForgePacketHandler.INSTANCE.send(
-                    PacketDistributor.PLAYER.with(() -> serverPlayer),
-                    new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer()))
-                );
+                WhiteNoiseForgePacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+                        new ConfigSyncPacket(new FriendlyByteBuf(Unpooled.buffer())));
             }
         }
     }

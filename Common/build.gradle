@@ -34,17 +34,10 @@ publishing {
             from components.java
         }
     }
-
     repositories {
-        if (project.hasProperty('urlMaven')) {
-            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
-                maven {
-                    url urlMaven
-                    credentials {
-                        username userMaven
-                        password passMaven
-                    }
-                }
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
             }
         }
     }

@@ -24,7 +24,6 @@ import java.io.File;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.main.GameConfig;
 
@@ -59,7 +58,7 @@ public class WhiteNoiseClientFabric implements ClientModInitializer {
         }
 
         FabricConfigHelper.gameDir = file.toPath();
-        FabricLoader.getInstance().invokeEntrypoints("whitenoise", WhiteNoiseConfigInitializer.class,
+        EntrypointUtils.invokeEntrypoints("whitenoise", WhiteNoiseConfigInitializer.class,
                 WhiteNoiseConfigInitializer::onInitializeConfig);
         WhiteNoiseConfigEvents.onLoadDefaultAndLocal();
     }

@@ -82,7 +82,7 @@ def replaceProperties = [
     'version': version, 'forge_mc_version_range': forge_mc_version_range,
     'forge_version_range': forge_version_range, 'license': license, 'mod_id': mod_id,
     'mod_author': mod_author, 'mod_description': mod_description, 'mod_name': mod_name,
-    'issue_tracker': issue_tracker, 'mod_credits': mod_credits
+    'issue_tracker': issue_tracker, 'mod_credits': mod_credits, 'source': source
 ]
 
 processResources {
@@ -90,8 +90,6 @@ processResources {
     duplicatesStrategy(DuplicatesStrategy.FAIL)
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
-    exclude('META-INF/mods.toml')
-    exclude('pack.mcmeta')
     filesMatching(resourceTargets) {
         expand replaceProperties
     }
@@ -105,21 +103,13 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            artifact jar
+            from components.java
         }
     }
     repositories {
-        if (project.hasProperty('urlMaven')) {
-
-            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
-
-                maven {
-                    url urlMaven
-                    credentials {
-                        username userMaven
-                        password passMaven
-                    }
-                }
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
             }
         }
     }

@@ -45,6 +45,8 @@ import com.google.common.collect.ImmutableMap;
 
 import net.minecraft.server.MinecraftServer;
 
+import org.apache.commons.io.FilenameUtils;
+
 import technology.roughness.whitenoise.WhiteNoiseConstants;
 import technology.roughness.whitenoise.platform.Services;
 
@@ -202,10 +204,16 @@ public class WhiteNoiseConfigTracker {
         }
         catch (ParsingException e) {
             try {
-                Files.delete(configData.getNioPath());
+                Path path = configData.getNioPath();
+
+                WhiteNoiseConstants.LOG.warn(CONFIG,
+                        "Configuration file {} could not be parsed. Creating backup file and correcting", path);
+
+                if (Files.exists(path)) {
+                    createBackup(path);
+                }
+                Files.delete(path);
                 configData.load();
-                WhiteNoiseConstants.LOG.warn("Configuration file {} could not be parsed. Correcting",
-                        configData.getNioPath());
                 return;
             }
             catch (Throwable t) {
@@ -213,6 +221,23 @@ public class WhiteNoiseConfigTracker {
             }
 
             throw e;
+        }
+    }
+
+    private static void createBackup(Path commentedFileConfig) {
+        Path path = commentedFileConfig.getParent();
+        String name = commentedFileConfig.getFileName().toString();
+        String fileName = FilenameUtils.removeExtension(name);
+        String extension = FilenameUtils.getExtension(name) + ".bak";
+        Path backup = path.resolve(fileName + "." + extension);
+
+        try {
+            Files.deleteIfExists(backup);
+            Files.copy(commentedFileConfig, backup);
+        }
+        catch (IOException exception) {
+            WhiteNoiseConstants.LOG.warn(CONFIG, "Failed to create backup file for {}", commentedFileConfig,
+                    exception);
         }
     }
 
