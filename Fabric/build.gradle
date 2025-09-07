@@ -1,0 +1,91 @@
+plugins {
+    id 'idea'
+    id 'maven-publish'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
+}
+
+archivesBaseName = "${mod_id}-fabric"
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${mappings_version}@zip")
+    })
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    implementation project(":Common")
+
+    implementation group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'
+    implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.5'
+    include group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'
+    include group: 'com.electronwill.night-config', name: 'toml', version: '3.6.5'
+}
+
+loom {
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs += "licenses"
+        }
+    }
+}
+
+def resourceTargets = ['fabric.mod.json', 'pack.mcmeta']
+def replaceProperties = [
+    'version': version, 'fabric_mc_version_range': fabric_mc_version_range,
+    'license': license, 'mod_id': mod_id, 'mod_author': mod_author,
+    'mod_description': mod_description, 'mod_name': mod_name,
+    'fabric_loader_version': fabric_loader_version, 'source': source,
+    'issue_tracker': issue_tracker
+]
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+    duplicatesStrategy(DuplicatesStrategy.FAIL)
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(resourceTargets) {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(JavaCompile) {
+    source(project(":Common").sourceSets.main.allSource)
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+    repositories {
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
+            }
+        }
+    }
+}
