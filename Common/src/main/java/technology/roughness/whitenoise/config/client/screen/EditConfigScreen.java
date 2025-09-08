@@ -290,6 +290,7 @@ public class EditConfigScreen extends Screen {
 
         private final Button button;
 
+        @SuppressWarnings("unchecked")
         public ListConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
                 String p_101103_, String key) {
             super(pTooltip, pLabel);
@@ -564,7 +565,6 @@ public class EditConfigScreen extends Screen {
 
         private final CycleButton<Object> checkbox;
 
-        @SuppressWarnings("varargs")
         public EnumConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
                 String p_101103_, String key, Class<T> clazz) {
             super(pTooltip, pLabel);
@@ -578,7 +578,7 @@ public class EditConfigScreen extends Screen {
 
                     return Component.literal("ERROR");
                 })
-                .withValues(clazz.getEnumConstants())
+                .withValues(EnumUtils.getEnumList(clazz).toArray())
                 .withInitialValue(
                     EnumUtils.getEnum(clazz, EditConfigScreen.this.values.get(key).toString())
                 )
@@ -641,4 +641,3 @@ public class EditConfigScreen extends Screen {
     }
 
 }
-
