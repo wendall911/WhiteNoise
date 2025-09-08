@@ -89,5 +89,8 @@ public class WhiteNoiseTestConfig {
                     s -> s instanceof String s1 && ResourceLocation.isValidResourceLocation(s1));
             builder.pop();
         }
+
     }
+
 }
+
