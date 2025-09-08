@@ -10,32 +10,34 @@
   ],
   "contact": {
     "homepage": "${source}",
-    "issues": "${issues}",
+    "issues": "${issue_tracker}",
     "sources": "${source}"
   },
   "license": "${license}",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.illusivesoulworks.spectrelib.SpectreFabricMod"
+      "technology.roughness.whitenoise.WhiteNoiseFabric"
     ],
     "client": [
-      "com.illusivesoulworks.spectrelib.SpectreClientFabricMod"
+      "technology.roughness.whitenoise.WhiteNoiseClientFabric"
     ],
     "preLaunch": [
-      "com.illusivesoulworks.spectrelib.SpectrePreLaunchFabricMod"
+      "technology.roughness.whitenoise.WhiteNoisePreLaunchFabric"
     ],
     "modmenu": [
-      "com.illusivesoulworks.spectrelib.integration.ModMenuPlugin"
+      "technology.roughness.whitenoise.integration.ModMenuPlugin"
     ]
   },
   "custom": {
     "modmenu": {
-      "badges": ["library"]
+      "badges": [
+        "library"
+      ]
     }
   },
   "mixins": [
-    "spectrelib.mixins.json"
+    "${mod_id}.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14",

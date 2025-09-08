@@ -1,10 +1,23 @@
+plugins {
+    id 'fabric-loom' version '1.11-SNAPSHOT' apply(false)
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)' apply(false)
+    id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT' apply(false)
+    id 'org.spongepowered.mixin' version "0.7-SNAPSHOT" apply(false)
+}
+allprojects {
+    apply plugin: 'java'
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        options.release = 17
+    }
+}
+
 subprojects {
     apply plugin: 'java'
-    
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     java.withSourcesJar()
-    java.withJavadocJar()
-        
+
     jar {
         from(rootProject.file("LICENSE"))
         from(rootProject.file("COPYING"))
@@ -18,7 +31,7 @@ subprojects {
                 'Implementation-Version'  : project.jar.archiveVersion,
                 'Implementation-Vendor'   : mod_author,
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'Timestampe'              : System.currentTimeMillis(),
+                'Timestamp'              : System.currentTimeMillis(),
                 'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
                 'Build-On-Minecraft'      : minecraft_version
             ])
@@ -34,7 +47,9 @@ subprojects {
     repositories {
         mavenCentral()
 
-        maven { url = "https://maven.terraformersmc.com" }
+        maven {
+            url = 'https://maven.terraformersmc.com'
+        }
 
         maven {
             name = 'Sponge / Mixin'
@@ -61,7 +76,7 @@ subprojects {
     // metadata includes mapped dependencies which are not reasonably consumable by
     // other mod developers.
     tasks.withType(GenerateModuleMetadata) {
-        enabled = false
+        it.enabled = false
     }
 
     tasks.withType(Jar).all {

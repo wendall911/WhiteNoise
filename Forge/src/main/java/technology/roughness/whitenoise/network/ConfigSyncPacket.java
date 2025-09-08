@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,29 +17,34 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.network;
+package technology.roughness.whitenoise.network;
 
-import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
 import java.util.function.Supplier;
+
 import net.minecraft.network.FriendlyByteBuf;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
+import technology.roughness.whitenoise.config.WhiteNoiseConfigNetwork;
+
 public record ConfigSyncPacket(FriendlyByteBuf data) {
 
-  public void encoder(FriendlyByteBuf buffer) {
-    buffer.writeBytes(data);
-  }
+    public void encoder(FriendlyByteBuf buffer) {
+        buffer.writeBytes(data);
+    }
 
-  public static ConfigSyncPacket decoder(FriendlyByteBuf buffer) {
-    return new ConfigSyncPacket(buffer);
-  }
+    public static ConfigSyncPacket decoder(FriendlyByteBuf buffer) {
+        return new ConfigSyncPacket(buffer);
+    }
 
-  public static void messageConsumer(ConfigSyncPacket packet, Supplier<NetworkEvent.Context> ctx) {
-    packet.data.retain();
-    ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> SpectreConfigNetwork.handleConfigSync(packet.data)));
-    ctx.get().setPacketHandled(true);
-  }
+    public static void messageConsumer(ConfigSyncPacket packet, Supplier<NetworkEvent.Context> ctx) {
+        packet.data.retain();
+        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+                () -> () -> WhiteNoiseConfigNetwork.handleConfigSync(packet.data)));
+        ctx.get().setPacketHandled(true);
+    }
+
 }
+

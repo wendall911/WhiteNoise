@@ -1,15 +1,16 @@
 plugins {
-    id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
+version = version
+group = group
 archivesBaseName = "${mod_id}-forge"
 
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_mc_version}-${parchment_version}-${minecraft_version}"
+    mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
 
     if (project.hasProperty('forge_ats_enabled') && project.findProperty('forge_ats_enabled').toBoolean()) {
         // This location is hardcoded in Forge and can not be changed.
@@ -29,7 +30,7 @@ minecraft {
                 modClientRun {
                     source sourceSets.main
                     source sourceSets.test
-                    source project(":common").sourceSets.main
+                    source project(":Common").sourceSets.main
                 }
             }
         }
@@ -43,7 +44,7 @@ minecraft {
             mods {
                 modServerRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
+                    source project(":Common").sourceSets.main
                 }
             }
         }
@@ -58,7 +59,7 @@ minecraft {
             mods {
                 modDataRun {
                     source sourceSets.main
-                    source project(":common").sourceSets.main
+                    source project(":Common").sourceSets.main
                 }
             }
         }
@@ -69,25 +70,27 @@ sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly project(":common")
-    testImplementation project(':common')
+    compileOnly project(":Common")
+    testImplementation project(':Common')
 }
 
 tasks.withType(JavaCompile) {
-    source(project(":common").sourceSets.main.allSource)
+    source(project(":Common").sourceSets.main.allSource)
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
+
 def replaceProperties = [
-        version: version, forge_mc_version_range: forge_mc_version_range, forge_version_range: forge_version_range,
-        license: license, mod_id: mod_id, mod_author: mod_author, mod_description: mod_description, mod_name: mod_name,
-        source: project.source, issues: issues
+    'version': version, 'forge_mc_version_range': forge_mc_version_range,
+    'forge_version_range': forge_version_range, 'license': license, 'mod_id': mod_id,
+    'mod_author': mod_author, 'mod_description': mod_description, 'mod_name': mod_name,
+    'issue_tracker': issue_tracker, 'mod_credits': mod_credits, 'source': source
 ]
+
 processResources {
-    from project(":common").sourceSets.main.resources
+    from project(":Common").sourceSets.main.resources
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
-
     filesMatching(resourceTargets) {
         expand replaceProperties
     }
@@ -101,23 +104,14 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
+            // This gives us the built obfuscated version Forge requires
             artifact jar
-            artifact sourcesJar
-            artifact javadocJar
         }
     }
     repositories {
-        if (project.hasProperty('urlMaven')) {
-
-            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
-
-                maven {
-                    url urlMaven
-                    credentials {
-                        username userMaven
-                        password passMaven
-                    }
-                }
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
             }
         }
     }

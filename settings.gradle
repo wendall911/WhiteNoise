@@ -9,20 +9,12 @@ pluginManagement {
             name = 'Sponge Snapshots'
             url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
-        maven {
-            name = 'Quilt (Release)'
-            url = 'https://maven.quiltmc.org/repository/release/'
-        }
-        maven {
-            name = 'Quilt (Snapshot)'
-            url = 'https://maven.quiltmc.org/repository/snapshot/'
-        }
-        maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
-        }
     }
 }
 
-rootProject.name = "${mod_id}"
-include("common", "fabric", "forge", "quilt")
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
+rootProject.name = "${mod_name}"
+include("Common", "Fabric", "Forge")

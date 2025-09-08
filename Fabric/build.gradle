@@ -1,7 +1,7 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'maven-publish'
     id 'idea'
+    id 'maven-publish'
+    id 'fabric-loom'
 }
 
 archivesBaseName = "${mod_id}-fabric"
@@ -10,12 +10,12 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_mc_version}:${parchment_version}@zip")
+        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${mappings_version}@zip")
     })
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation project(":common")
+    implementation project(":Common")
 
     modCompileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
     modLocalRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
@@ -52,23 +52,28 @@ sourceSets {
     }
 }
 
+def resourceTargets = ['fabric.mod.json', 'pack.mcmeta']
+def replaceProperties = [
+    'version': version, 'fabric_mc_version_range': fabric_mc_version_range,
+    'license': license, 'mod_id': mod_id, 'mod_author': mod_author,
+    'mod_description': mod_description, 'mod_name': mod_name,
+    'fabric_loader_version': fabric_loader_version, 'source': source,
+    'issue_tracker': issue_tracker
+]
+
 processResources {
-    from project(":common").sourceSets.main.resources
-    inputs.property "version", project.version
+    from project(":Common").sourceSets.main.resources
+    duplicatesStrategy(DuplicatesStrategy.FAIL)
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
 
-    filesMatching("fabric.mod.json") {
-        expand 'version': project.version, 'fabric_mc_version_range': project.fabric_mc_version_range, 'license': project.license,
-                'mod_id': project.mod_id, 'mod_author': project.mod_author, 'mod_description': project.mod_description,
-                'mod_name': project.mod_name, 'issues': project.issues, 'source': project.source
-    }
-
-    filesMatching("pack.mcmeta") {
-        expand 'mod_name': project.mod_name
+    filesMatching(resourceTargets) {
+        expand replaceProperties
     }
 }
 
 tasks.withType(JavaCompile) {
-    source(project(":common").sourceSets.main.allSource)
+    source(project(":Common").sourceSets.main.allSource)
 }
 
 publishing {
@@ -80,19 +85,10 @@ publishing {
             from components.java
         }
     }
-
     repositories {
-        if (project.hasProperty('urlMaven')) {
-
-            if (project.hasProperty('userMaven') && project.hasProperty('passMaven')) {
-
-                maven {
-                    url urlMaven
-                    credentials {
-                        username userMaven
-                        password passMaven
-                    }
-                }
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
             }
         }
     }

@@ -1,31 +1,31 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[46,)"
 license="LGPL-2.1-only"
 [[mods]]
-modId="spectretest"
-version="1.0.0"
-displayName="SpectreTest"
-authors="Illusive Soulworks"
-description='''
-A test mod for SpectreLib.
-'''
+    modId="whitenoisetest"
+    version="1.0.0"
+    displayName="WhiteNoiseTest"
+    authors="wendall911"
+    description='''
+    A test mod for WhiteNoise.
+    '''
 [[mods]]
-modId="spectrelib"
-version="1.0.0"
-displayName="SpectreLib"
-authors="Illusive Soulworks"
-description='''
-Cross-platform library for Illusive Soulworks mods.
-'''
-[[dependencies.spectretest]]
+    modId="whitenoise"
+    version="1.0.0"
+    displayName="WhiteNoise"
+    authors="wendall911"
+    description='''
+    Cross-platform library for wendall911's mods.
+    '''
+[[dependencies.whitenoisetest]]
     modId="forge"
     mandatory=true
-    versionRange="[41,)"
+    versionRange="[46,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.spectretest]]
+[[dependencies.whitenoisetest]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20,)"
+    versionRange="[1.20,1.21)"
     ordering="NONE"
     side="BOTH"

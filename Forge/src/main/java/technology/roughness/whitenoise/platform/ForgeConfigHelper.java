@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,49 +17,56 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.platform;
+package technology.roughness.whitenoise.platform;
 
-import com.illusivesoulworks.spectrelib.platform.services.IConfigHelper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 
+import technology.roughness.whitenoise.platform.services.IConfigHelper;
+
 public class ForgeConfigHelper implements IConfigHelper {
 
-  private static final LevelResource SERVERCONFIG = new LevelResource("serverconfig");
+    private static final LevelResource SERVERCONFIG = new LevelResource("serverconfig");
 
-  @Override
-  public Path getBackwardsCompatiblePath() {
-    return FMLPaths.GAMEDIR.get().resolve(FMLConfig.defaultConfigPath());
-  }
-
-  @Override
-  public Path getGlobalConfigPath() {
-    return FMLPaths.CONFIGDIR.get();
-  }
-
-  @Override
-  public Path getServerConfigPath(final MinecraftServer server) {
-    final Path serverConfig = server.getWorldPath(SERVERCONFIG);
-
-    if (!Files.isDirectory(serverConfig)) {
-      try {
-        Files.createDirectories(serverConfig);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+    @Override
+    public Path getBackwardsCompatiblePath() {
+        return FMLPaths.GAMEDIR.get().resolve(FMLConfig.defaultConfigPath());
     }
-    return serverConfig;
-  }
 
-  @Override
-  public boolean isDedicatedServer() {
-    return FMLLoader.getDist() == Dist.DEDICATED_SERVER;
-  }
+    @Override
+    public Path getGlobalConfigPath() {
+        return FMLPaths.CONFIGDIR.get();
+    }
+
+    @Override
+    public Path getServerConfigPath(final MinecraftServer server) {
+        final Path serverConfig = server.getWorldPath(SERVERCONFIG);
+
+        if (!Files.isDirectory(serverConfig)) {
+            try {
+                Files.createDirectories(serverConfig);
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return serverConfig;
+    }
+
+    @Override
+    public boolean isDedicatedServer() {
+        return FMLLoader.getDist() == Dist.DEDICATED_SERVER;
+    }
+
 }
+

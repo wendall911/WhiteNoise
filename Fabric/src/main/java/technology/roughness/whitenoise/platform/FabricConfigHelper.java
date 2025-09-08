@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,57 +17,64 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.platform;
+package technology.roughness.whitenoise.platform;
 
-import com.illusivesoulworks.spectrelib.SpectreConstants;
-import com.illusivesoulworks.spectrelib.mixin.SpectreLibMixinLevelResource;
-import com.illusivesoulworks.spectrelib.platform.services.IConfigHelper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 
+import technology.roughness.whitenoise.WhiteNoise;
+import technology.roughness.whitenoise.mixin.WhiteNoiseMixinLevelResource;
+import technology.roughness.whitenoise.platform.services.IConfigHelper;
+
 public class FabricConfigHelper implements IConfigHelper {
 
-  public static Path gameDir = new File(".").toPath();
+    public static Path gameDir = new File(".").toPath();
 
-  private static LevelResource SERVERCONFIG = null;
+    private static LevelResource SERVERCONFIG = null;
 
-  @Override
-  public Path getBackwardsCompatiblePath() {
-    return gameDir.resolve("defaultconfigs");
-  }
-
-  @Override
-  public Path getGlobalConfigPath() {
-    return gameDir.resolve("config");
-  }
-
-  @Override
-  public Path getServerConfigPath(MinecraftServer server) {
-
-    if (SERVERCONFIG == null) {
-      SERVERCONFIG = SpectreLibMixinLevelResource.spectrelib$create("serverconfig");
+    @Override
+    public Path getBackwardsCompatiblePath() {
+        return gameDir.resolve("defaultconfigs");
     }
-    final Path serverConfig = server.getWorldPath(SERVERCONFIG);
 
-    if (!Files.isDirectory(serverConfig)) {
-      try {
-        Files.createDirectory(serverConfig);
-      } catch (IOException e) {
-        SpectreConstants.LOG.error("Could not create serverconfig directory!");
-        e.printStackTrace();
-      }
+    @Override
+    public Path getGlobalConfigPath() {
+        return gameDir.resolve("config");
     }
-    return serverConfig;
-  }
 
-  @Override
-  public boolean isDedicatedServer() {
-    return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
-  }
+    @Override
+    public Path getServerConfigPath(MinecraftServer server) {
+        if (SERVERCONFIG == null) {
+            SERVERCONFIG = WhiteNoiseMixinLevelResource.whitenoise$create("serverconfig");
+        }
+
+        final Path serverConfig = server.getWorldPath(SERVERCONFIG);
+
+        if (!Files.isDirectory(serverConfig)) {
+            try {
+                Files.createDirectory(serverConfig);
+            }
+            catch (IOException e) {
+                WhiteNoise.LOGGER.error("Could not create serverconfig directory!");
+                e.printStackTrace();
+            }
+        }
+
+        return serverConfig;
+    }
+
+    @Override
+    public boolean isDedicatedServer() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+    }
+
 }
+
