@@ -11,10 +11,10 @@ import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.network.chat.Component;
 
-import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigTracker;
 import technology.roughness.whitenoise.config.client.screen.ModConfigSelectScreen;
+import technology.roughness.whitenoise.WhiteNoise;
 
 public class ModMenuPlugin implements ModMenuApi {
 
