@@ -57,11 +57,11 @@ subprojects {
         }
 
         maven {
-            name = 'BlameJared Maven (CrT / Bookshelf)'
+            name = 'BlameJared Maven (CrT / Bookshelf / JEI (Newer) / vazkii / xyz)'
             url = 'https://maven.blamejared.com'
         }
-		
-		maven {
+
+        maven {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org/'
         }
