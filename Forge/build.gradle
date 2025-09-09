@@ -22,6 +22,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
             ideaModule "${rootProject.name}.${project.name}.main"
             taskName 'Client'
             property 'mixin.env.remapRefMap', 'true'
@@ -37,6 +38,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
             ideaModule "${rootProject.name}.${project.name}.main"
             taskName 'Server'
             property 'mixin.env.remapRefMap', 'true'
@@ -79,7 +81,6 @@ tasks.withType(JavaCompile) {
 }
 
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
-
 def replaceProperties = [
     'version': version, 'forge_mc_version_range': forge_mc_version_range,
     'forge_version_range': forge_version_range, 'license': license, 'mod_id': mod_id,
