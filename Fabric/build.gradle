@@ -1,7 +1,7 @@
 plugins {
     id 'idea'
     id 'maven-publish'
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom'
 }
 
 archivesBaseName = "${mod_id}-fabric"
@@ -17,10 +17,10 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation project(":Common")
 
-    implementation group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'
-    implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.6.5'
-    include group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'
-    include group: 'com.electronwill.night-config', name: 'toml', version: '3.6.5'
+    implementation group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
+    implementation group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
+    include group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
+    include group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
 }
 
 loom {
