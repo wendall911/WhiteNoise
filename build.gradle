@@ -1,6 +1,21 @@
-subprojects {
+plugins {
+    id 'fabric-loom' version '0.11-SNAPSHOT' apply(false)
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)' apply(false)
+    id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT' apply(false)
+    id 'org.spongepowered.mixin' version "0.7-SNAPSHOT" apply(false)
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+' apply(false)
+}
+allprojects {
     apply plugin: 'java'
 
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        options.release = 17
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     java.withSourcesJar()
 
@@ -39,7 +54,7 @@ subprojects {
         }
 
         maven {
-            name = 'BlameJared Maven (CrT / Bookshelf)'
+            name = 'BlameJared Maven (CrT / Bookshelf / JEI (Newer) / vazkii / xyz)'
             url = 'https://maven.blamejared.com'
         }
 
@@ -58,7 +73,7 @@ subprojects {
     // metadata includes mapped dependencies which are not reasonably consumable by
     // other mod developers.
     tasks.withType(GenerateModuleMetadata) {
-        enabled = false
+        it.enabled = false
     }
 
     tasks.withType(Jar).all {
