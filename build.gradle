@@ -1,9 +1,9 @@
 subprojects {
     apply plugin: 'java'
-    
+
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     java.withSourcesJar()
-        
+
     jar {
         from(rootProject.file("LICENSE"))
         from(rootProject.file("COPYING"))
@@ -42,8 +42,8 @@ subprojects {
             name = 'BlameJared Maven (CrT / Bookshelf)'
             url = 'https://maven.blamejared.com'
         }
-		
-		maven {
+
+        maven {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org/'
         }
