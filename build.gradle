@@ -62,6 +62,19 @@ subprojects {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org/'
         }
+
+        maven {
+            name = 'TerraformersMC (Trinkets / ModMenu)'
+            url 'https://maven.terraformersmc.com/releases'
+        }
+
+        maven {
+            name = 'Curse Maven'
+            url = 'https://cursemaven.com'
+            content {
+                includeGroup 'curse.maven'
+            }
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {
