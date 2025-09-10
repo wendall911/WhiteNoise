@@ -91,6 +91,7 @@ processResources {
     duplicatesStrategy(DuplicatesStrategy.FAIL)
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
+
     filesMatching(resourceTargets) {
         expand replaceProperties
     }
