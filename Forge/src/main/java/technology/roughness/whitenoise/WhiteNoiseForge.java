@@ -46,6 +46,7 @@ import technology.roughness.whitenoise.network.WhiteNoiseForgePacketHandler;
 @Mod(WhiteNoise.MODID)
 public class WhiteNoiseForge {
 
+    @SuppressWarnings("removal")
     public WhiteNoiseForge() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
