@@ -12,18 +12,18 @@ configurations {
 }
 
 dependencies {
-    compileOnly(project(':common')) {
+    compileOnly(project(':Common')) {
         capabilities {
             requireCapability "$group:$mod_id"
         }
     }
-    testCompileOnly(project(':common')) {
+    testCompileOnly(project(':Common')) {
         capabilities {
             requireCapability "$group:$mod_id"
         }
     }
-    commonJava project(path: ':common', configuration: 'commonJava')
-    commonResources project(path: ':common', configuration: 'commonResources')
+    commonJava project(path: ':Common', configuration: 'commonJava')
+    commonResources project(path: ':Common', configuration: 'commonResources')
 }
 
 tasks.named('compileJava', JavaCompile) {
@@ -34,11 +34,6 @@ tasks.named('compileJava', JavaCompile) {
 processResources {
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
-}
-
-tasks.named('javadoc', Javadoc).configure {
-    dependsOn(configurations.commonJava)
-    source(configurations.commonJava)
 }
 
 tasks.named("sourcesJar", Jar) {

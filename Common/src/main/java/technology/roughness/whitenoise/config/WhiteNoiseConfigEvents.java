@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,21 +17,23 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.config;
+package technology.roughness.whitenoise.config;
 
 import net.minecraft.server.MinecraftServer;
 
-public class SpectreConfigEvents {
+public class WhiteNoiseConfigEvents {
 
-  public static void onLoadGlobal() {
-    SpectreConfigTracker.INSTANCE.loadGlobalConfigs();
-  }
+    public static void onLoadGlobal() {
+        WhiteNoiseConfigTracker.INSTANCE.loadGlobalConfigs();
+    }
 
-  public static void onLoadServer(final MinecraftServer server) {
-    SpectreConfigTracker.INSTANCE.loadServerConfigs(server);
-  }
+    public static void onLoadServer(final MinecraftServer server) {
+        WhiteNoiseConfigTracker.INSTANCE.loadServerConfigs(server);
+    }
 
-  public static void onUnloadServer() {
-    SpectreConfigTracker.INSTANCE.unloadServerConfigs();
-  }
+    public static void onUnloadServer() {
+        WhiteNoiseConfigTracker.INSTANCE.unloadServerConfigs();
+    }
+
 }
+

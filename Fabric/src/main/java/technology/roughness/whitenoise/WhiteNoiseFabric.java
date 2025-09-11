@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,37 +17,41 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib;
+package technology.roughness.whitenoise;
 
-import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import java.util.List;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
 import net.minecraft.server.level.ServerPlayer;
 
-public class SpectreFabricMod implements ModInitializer {
+import technology.roughness.whitenoise.config.WhiteNoiseConfigEvents;
+import technology.roughness.whitenoise.config.WhiteNoiseConfigNetwork;
+import technology.roughness.whitenoise.config.WhiteNoiseConfigPayload;
 
-  @Override
-  public void onInitialize() {
-    PayloadTypeRegistry.playS2C()
-        .register(SpectreConfigPayload.TYPE, SpectreConfigPayload.STREAM_CODEC);
-    ServerLifecycleEvents.SERVER_STARTING.register(SpectreConfigEvents::onLoadServer);
-    ServerLifecycleEvents.SERVER_STOPPED.register(server -> SpectreConfigEvents.onUnloadServer());
-    ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-      ServerPlayer serverPlayer = handler.getPlayer();
-      List<SpectreConfigPayload> configData = SpectreConfigNetwork.getConfigSync();
+public class WhiteNoiseFabric implements ModInitializer {
 
-      if (!configData.isEmpty()) {
+    @Override
+    public void onInitialize() {
+        PayloadTypeRegistry.playS2C()
+                .register(WhiteNoiseConfigPayload.TYPE, WhiteNoiseConfigPayload.STREAM_CODEC);
+        ServerLifecycleEvents.SERVER_STARTING.register(WhiteNoiseConfigEvents::onLoadServer);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> WhiteNoiseConfigEvents.onUnloadServer());
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ServerPlayer serverPlayer = handler.getPlayer();
+            List<WhiteNoiseConfigPayload> configData = WhiteNoiseConfigNetwork.getConfigSync();
 
-        for (SpectreConfigPayload configDatum : configData) {
-          ServerPlayNetworking.send(serverPlayer, configDatum);
-        }
-      }
-    });
-  }
+            if (!configData.isEmpty()) {
+                for (WhiteNoiseConfigPayload configDatum : configData) {
+                    ServerPlayNetworking.send(serverPlayer, configDatum);
+                }
+            }
+        });
+    }
+
 }
+

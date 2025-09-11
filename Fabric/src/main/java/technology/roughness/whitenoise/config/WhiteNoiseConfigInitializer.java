@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,9 +17,11 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.config;
+package technology.roughness.whitenoise.config;
 
-public interface SpectreConfigInitializer {
+public interface WhiteNoiseConfigInitializer {
 
-  void onInitializeConfig();
+    void onInitializeConfig();
+
 }
+

@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,17 +17,20 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.mixin;
+package technology.roughness.whitenoise.mixin;
 
 import net.minecraft.world.level.storage.LevelResource;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(LevelResource.class)
-public interface SpectreLibMixinLevelResource {
+public interface WhiteNoiseMixinLevelResource {
 
-  @Invoker("<init>")
-  static LevelResource spectrelib$create(String id) {
-    throw new AssertionError();
-  }
+    @Invoker("<init>")
+    static LevelResource whitenoise$create(String id) {
+        throw new AssertionError();
+    }
+
 }
+

@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,25 +17,32 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.config;
+package technology.roughness.whitenoise.config;
 
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-public class SpectreConfigLoader {
+public class WhiteNoiseConfigLoader {
 
-  public static final Marker CONFIG = MarkerFactory.getMarker("CONFIG");
+    public static final Marker CONFIG = MarkerFactory.getMarker("CONFIG");
 
-  public static SpectreConfig add(SpectreConfig.Type type, SpectreConfigSpec spec, String modId,
-                                  String fileName) {
-    SpectreConfig config = new SpectreConfig(type, spec, modId, fileName);
-    SpectreConfigTracker.INSTANCE.track(config);
-    return config;
-  }
+    public static WhiteNoiseConfig add(WhiteNoiseConfig.Type type, WhiteNoiseConfigSpec spec,
+            String modId, String fileName) {
+        WhiteNoiseConfig config = new WhiteNoiseConfig(type, spec, modId, fileName);
 
-  public static SpectreConfig add(SpectreConfig.Type type, SpectreConfigSpec spec, String modId) {
-    SpectreConfig config = new SpectreConfig(type, spec, modId);
-    SpectreConfigTracker.INSTANCE.track(config);
-    return config;
-  }
+        WhiteNoiseConfigTracker.INSTANCE.track(config);
+
+        return config;
+    }
+
+    public static WhiteNoiseConfig add(WhiteNoiseConfig.Type type, WhiteNoiseConfigSpec spec,
+            String modId) {
+        WhiteNoiseConfig config = new WhiteNoiseConfig(type, spec, modId);
+
+        WhiteNoiseConfigTracker.INSTANCE.track(config);
+
+        return config;
+    }
+
 }
+

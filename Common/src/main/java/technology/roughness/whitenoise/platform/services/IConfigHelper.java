@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,18 +17,21 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.platform.services;
+package technology.roughness.whitenoise.platform.services;
 
 import java.nio.file.Path;
+
 import net.minecraft.server.MinecraftServer;
 
 public interface IConfigHelper {
 
-  Path getBackwardsCompatiblePath();
+    Path getBackwardsCompatiblePath();
 
-  Path getGlobalConfigPath();
+    Path getGlobalConfigPath();
 
-  Path getServerConfigPath(final MinecraftServer server);
+    Path getServerConfigPath(final MinecraftServer server);
 
-  boolean isDedicatedServer();
+    boolean isDedicatedServer();
+
 }
+

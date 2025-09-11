@@ -1,17 +1,17 @@
 {
     "schemaVersion": 1,
-    "id": "spectretest",
+    "id": "whitenoisetest",
     "version": "1.0.0",
-    "name": "SpectreTest",
-    "description": "A test mod for SpectreLib.",
+    "name": "WhiteNoiseTest",
+    "description": "A test mod for WhiteNoise.",
     "authors": [
-      "Illusive Soulworks"
+      "wendall911"
     ],
     "license": "LGPL-2.1-only",
     "environment": "*",
     "entrypoints": {
-      "spectrelib-config": [
-        "com.illusivesoulworks.spectrelib.SpectreTest"
+      "whitenoise-config": [
+        "technology.roughness.whitenoise.WhiteNoiseTest"
       ]
     },
     "mixins": [],
@@ -21,5 +21,4 @@
       "minecraft": "*",
       "java": ">=17"
     }
-  }
-  
+}

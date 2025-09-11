@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,27 +17,30 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.network;
+package technology.roughness.whitenoise.network;
 
-import com.illusivesoulworks.spectrelib.config.SpectreConfigNetwork;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigPayload;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SpectreClientPayloadHandler {
+import technology.roughness.whitenoise.config.WhiteNoiseConfigNetwork;
+import technology.roughness.whitenoise.config.WhiteNoiseConfigPayload;
 
-  private static final SpectreClientPayloadHandler INSTANCE = new SpectreClientPayloadHandler();
+public class WhiteNoiseClientPayloadHandler {
 
-  public static SpectreClientPayloadHandler getInstance() {
-    return INSTANCE;
-  }
+    private static final WhiteNoiseClientPayloadHandler INSTANCE = new WhiteNoiseClientPayloadHandler();
 
-  public void handleData(final SpectreConfigPayload packet, final IPayloadContext ctx) {
-    ctx.enqueueWork(
-            () -> SpectreConfigNetwork.acceptSyncedConfigs(packet.contents, packet.fileName))
-        .exceptionally(e -> {
-          ctx.disconnect(Component.translatable("spectrelib.networking.failed", e.getMessage()));
-          return null;
-        });
-  }
+    public static WhiteNoiseClientPayloadHandler getInstance() {
+        return INSTANCE;
+    }
+
+    public void handleData(final WhiteNoiseConfigPayload packet, final IPayloadContext ctx) {
+        ctx.enqueueWork(
+            () -> WhiteNoiseConfigNetwork.acceptSyncedConfigs(packet.contents, packet.fileName))
+                .exceptionally(e -> {
+                    ctx.disconnect(Component.translatable("whitenoise.networking.failed", e.getMessage()));
+                    return null;
+                });
+    }
+
 }
+

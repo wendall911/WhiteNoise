@@ -1,40 +1,44 @@
-package com.illusivesoulworks.spectrelib.config;
+package technology.roughness.whitenoise.config;
 
-import com.illusivesoulworks.spectrelib.SpectreConstants;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
-public class SpectreConfigPayload implements CustomPacketPayload {
+import technology.roughness.whitenoise.WhiteNoise;
 
-  public static final Type<SpectreConfigPayload> TYPE =
-      new Type<>(ResourceLocation.fromNamespaceAndPath(SpectreConstants.MOD_ID, "sync"));
-  public static final StreamCodec<FriendlyByteBuf, SpectreConfigPayload> STREAM_CODEC =
-      StreamCodec.composite(
-          ByteBufCodecs.BYTE_ARRAY,
-          packet -> packet.contents,
-          ByteBufCodecs.STRING_UTF8,
-          packet -> packet.fileName,
-          SpectreConfigPayload::new);
+import static technology.roughness.whitenoise.util.ResourceLocationHelper.loc;
 
-  public final String fileName;
-  public final byte[] contents;
+public class WhiteNoiseConfigPayload implements CustomPacketPayload {
 
-  public SpectreConfigPayload(byte[] contents, String fileName) {
-    this.fileName = fileName;
-    this.contents = contents;
-  }
+    public static final Type<WhiteNoiseConfigPayload> TYPE =
+            new Type<>(loc(WhiteNoise.MODID, "sync"));
+    public static final StreamCodec<FriendlyByteBuf, WhiteNoiseConfigPayload> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.BYTE_ARRAY,
+        packet -> packet.contents,
+        ByteBufCodecs.STRING_UTF8,
+        packet -> packet.fileName,
+        WhiteNoiseConfigPayload::new
+    );
 
-  public SpectreConfigPayload(FriendlyByteBuf buf) {
-    this(buf.readByteArray(), buf.readUtf());
-  }
+    public final String fileName;
+    public final byte[] contents;
 
-  @Nonnull
-  @Override
-  public Type<? extends CustomPacketPayload> type() {
-    return TYPE;
-  }
+    public WhiteNoiseConfigPayload(byte[] contents, String fileName) {
+        this.fileName = fileName;
+        this.contents = contents;
+    }
+
+    public WhiteNoiseConfigPayload(FriendlyByteBuf buf) {
+        this(buf.readByteArray(), buf.readUtf());
+    }
+
+    @NotNull
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
 }

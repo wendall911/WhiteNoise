@@ -1,10 +1,13 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom'
 }
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${mappings_version}@zip")
+    })
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
@@ -12,25 +15,13 @@ dependencies {
     modCompileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
     modLocalRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
 
-    implementation group: 'com.electronwill.night-config', name: 'core', version: '3.8.0'
-    implementation group: 'com.electronwill.night-config', name: 'toml', version: '3.8.0'
-    include group: 'com.electronwill.night-config', name: 'core', version: '3.8.0'
-    include group: 'com.electronwill.night-config', name: 'toml', version: '3.8.0'
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDirs += "licenses"
-        }
-    }
+    implementation group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
+    implementation group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
+    include group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
+    include group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
 }
 
 loom {
-    def aw = project(":common").file("src/main/resources/${mod_id}.accesswidener")
-    if (aw.exists()) {
-        accessWidenerPath.set(aw)
-    }
     mixin {
         defaultRefmapName.set("${mod_id}.refmap.json")
     }
@@ -40,13 +31,11 @@ loom {
             source sourceSets.test
             setConfigName("Fabric Client")
             ideConfigGenerated(true)
-            runDir("runs/client")
         }
         server {
             server()
             setConfigName("Fabric Server")
             ideConfigGenerated(true)
-            runDir("runs/server")
         }
     }
 }
@@ -58,6 +47,13 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
+        }
+    }
+    repositories {
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
+            }
         }
     }
 }

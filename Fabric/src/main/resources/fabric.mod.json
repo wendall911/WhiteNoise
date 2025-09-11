@@ -3,42 +3,39 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "${mod_name}",
-  "description": "${description}",
+  "description": "${mod_description}",
   "authors": [
     "${mod_author}"
   ],
   "contact": {
-    "sources": "${sources_url}",
-    "issues": "${issues_url}"
+    "issues": "${issue_tracker}",
+    "sources": "${source_url}",
+    "homepage": "${source_url}"
   },
   "license": "${license}",
   "icon": "${mod_id}_icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.illusivesoulworks.spectrelib.SpectreFabricMod"
+      "technology.roughness.whitenoise.WhiteNoiseFabric"
     ],
     "client": [
-      "com.illusivesoulworks.spectrelib.SpectreClientFabricMod"
+      "technology.roughness.whitenoise.WhiteNoiseClientFabric"
     ],
     "preLaunch": [
-      "com.illusivesoulworks.spectrelib.SpectrePreLaunchFabricMod"
+      "technology.roughness.whitenoise.WhiteNoisePreLaunchFabric"
     ],
     "modmenu": [
-      "com.illusivesoulworks.spectrelib.integration.ModMenuPlugin"
+      "technology.roughness.whitenoise.integration.ModMenuPlugin"
     ]
   },
   "mixins": [
-    "spectrelib.mixins.json"
+    "${mod_id}.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14",
-    "fabric-api": "*",
-    "minecraft": "${minecraft_version_range_alt}",
-    "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
+    "fabricloader": "${fabric_loader_min_version}",
+    "fabric": "*",
+    "minecraft": ${fabric_mc_version_range},
+    "java": ">=${java_version}"
   }
 }
-  

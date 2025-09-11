@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,23 +17,26 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib;
+package technology.roughness.whitenoise;
 
-import com.illusivesoulworks.spectrelib.config.SpectreConfigEvents;
-import com.illusivesoulworks.spectrelib.config.SpectreConfigInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
-public class SpectrePreLaunchFabricMod implements PreLaunchEntrypoint {
+import technology.roughness.whitenoise.config.WhiteNoiseConfigEvents;
+import technology.roughness.whitenoise.config.WhiteNoiseConfigInitializer;
 
-  @Override
-  public void onPreLaunch() {
+public class WhiteNoisePreLaunchFabric implements PreLaunchEntrypoint {
 
-    if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-      EntrypointUtils.invokeEntrypoints("spectrelib-config", SpectreConfigInitializer.class,
-          SpectreConfigInitializer::onInitializeConfig);
-      SpectreConfigEvents.onLoadGlobal();
+    @Override
+    public void onPreLaunch() {
+
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            EntrypointUtils.invokeEntrypoints("whitenoise-config", WhiteNoiseConfigInitializer.class,
+                    WhiteNoiseConfigInitializer::onInitializeConfig);
+            WhiteNoiseConfigEvents.onLoadGlobal();
+        }
     }
-  }
+
 }
+

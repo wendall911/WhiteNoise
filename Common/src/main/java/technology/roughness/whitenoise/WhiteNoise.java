@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,14 +17,16 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib;
+package technology.roughness.whitenoise;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SpectreConstants {
+public class WhiteNoise {
 
-	public static final String MOD_ID = "spectrelib";
-	public static final String MOD_NAME = "SpectreLib";
-	public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
+    public static final String MODID = "whitenoise";
+    public static final String MOD_NAME = "WhiteNoise";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+
 }
+

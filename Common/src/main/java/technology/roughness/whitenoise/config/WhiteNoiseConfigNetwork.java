@@ -1,4 +1,6 @@
 /*
+ * Derived from Spectrelib
+ * https://github.com/illusivesoulworks/spectrelib
  * Copyright (C) 2022 Illusive Soulworks
  *
  * This program is free software; you can redistribute it and/or
@@ -15,34 +17,37 @@
  * License along with this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.illusivesoulworks.spectrelib.config;
+package technology.roughness.whitenoise.config;
 
-import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import io.netty.buffer.Unpooled;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class SpectreConfigNetwork {
+public class WhiteNoiseConfigNetwork {
 
-  public static List<SpectreConfigPayload> getConfigSync() {
-    Map<String, byte[]> configData = SpectreConfigTracker.INSTANCE.getConfigSync();
+    public static List<WhiteNoiseConfigPayload> getConfigSync() {
+        Map<String, byte[]> configData = WhiteNoiseConfigTracker.INSTANCE.getConfigSync();
 
-    if (configData.isEmpty()) {
-      return new ArrayList<>();
+        if (configData.isEmpty()) {
+            return new ArrayList<>();
+        }
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeMap(configData, FriendlyByteBuf::writeUtf, (k, v) -> k.writeByteArray(v));
+        return configData.entrySet().stream()
+                .map(e -> new WhiteNoiseConfigPayload(e.getValue(), e.getKey()))
+                .toList();
     }
-    FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-    buf.writeMap(configData, FriendlyByteBuf::writeUtf, (k, v) -> k.writeByteArray(v));
-    return configData.entrySet().stream()
-        .map(e -> new SpectreConfigPayload(e.getValue(), e.getKey()))
-        .toList();
-  }
 
-  public static void acceptSyncedConfigs(byte[] data, String fileName) {
-
-    if (!Minecraft.getInstance().isLocalServer()) {
-      SpectreConfigTracker.INSTANCE.acceptSyncedConfigs(fileName, data);
+    public static void acceptSyncedConfigs(byte[] data, String fileName) {
+        if (!Minecraft.getInstance().isLocalServer()) {
+            WhiteNoiseConfigTracker.INSTANCE.acceptSyncedConfigs(fileName, data);
+        }
     }
-  }
+
 }
+

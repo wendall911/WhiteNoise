@@ -2,22 +2,22 @@ modLoader="javafml"
 loaderVersion="[2,)"
 license="LGPL-2.1-only"
 [[mods]]
-modId="spectretest"
+modId="whitenoisetest"
 version="1.0.0"
-displayName="SpectreTest"
-authors="Illusive Soulworks"
+displayName="WhiteNoiseTest"
+authors="wendall911"
 description='''
-A test mod for SpectreLib.
+A test mod for WhiteNoise.
 '''
-[[dependencies.spectretest]]
+[[dependencies.whitenoisetest]]
     modId="neoforge"
     type="required"
     versionRange="[2,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.spectretest]]
+[[dependencies.whitenoisetest]]
     modId="minecraft"
     type="required"
-    versionRange="[1.20,)"
+    versionRange="[1.21.1,1.21.2)"
     ordering="NONE"
     side="BOTH"
