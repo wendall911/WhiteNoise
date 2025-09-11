@@ -1,9 +1,11 @@
 package technology.roughness.whitenoise.platform;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,6 +27,11 @@ public class ForgePlatform implements IPlatform {
     @Override
     public boolean isPhysicalClient() {
         return FMLLoader.getDist() == Dist.CLIENT;
+    }
+
+    @Override
+    public boolean isFakePlayer(Player player) {
+        return player instanceof FakePlayer;
     }
 
 }
