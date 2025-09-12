@@ -62,13 +62,14 @@ public class ModConfigSelectScreen extends Screen {
     }
 
     class ModConfigSelectionList extends ObjectSelectionList<ModConfigSelectionList.Entry> {
+
         public ModConfigSelectionList(Minecraft mc) {
             super(mc, ModConfigSelectScreen.this.width, ModConfigSelectScreen.this.height - 75, 43, 24);
 
             ModConfigSelectScreen.this.configs.values().forEach((configs) -> {
-
                 for (WhiteNoiseConfig config : configs) {
                     ModConfigSelectionList.Entry entry = new ModConfigSelectionList.Entry(config);
+
                     this.addEntry(entry);
                 }
             });
@@ -107,17 +108,21 @@ public class ModConfigSelectScreen extends Screen {
                     (button) -> {
                         CommentedConfig commentedConfig =
                             config.getConfigData(WhiteNoiseConfig.InstanceType.GLOBAL);
+
                         Consumer<Map<String, Object>> consumer = (values) -> {
                             commentedConfig.valueMap().putAll(values);
                             config.setConfigData(WhiteNoiseConfig.InstanceType.GLOBAL, commentedConfig, false);
                             config.fireLoad(true);
                         };
+
                         WhiteNoiseConfigSpec spec = config.getSpec();
+
                         EditConfigScreen editConfigScreen =
                             new EditConfigScreen(Component.literal(this.fileName), Component.empty(),
                                 spec.getSpec().valueMap(), spec.getValues().valueMap(),
                                 commentedConfig.valueMap(), ModConfigSelectionList.this.minecraft.screen,
                                 consumer);
+
                         ModConfigSelectionList.this.minecraft.setScreen(editConfigScreen);
                     }).build();
             }

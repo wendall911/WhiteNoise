@@ -97,7 +97,6 @@ public class WhiteNoiseConfig {
     }
 
     public void save(InstanceType type) {
-
         if (this.configData.containsKey(type)) {
             CommentedConfig config = this.getConfigData(type);
 

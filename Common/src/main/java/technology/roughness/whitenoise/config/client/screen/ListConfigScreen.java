@@ -163,7 +163,6 @@ public class ListConfigScreen extends Screen {
         private final List<AbstractWidget> children = new ArrayList<>();
 
         public Entry(int index, int width) {
-
             if (index >= 0) {
                 String currentValue = ListConfigScreen.this.values.get(index);
                 this.input =
@@ -171,12 +170,12 @@ public class ListConfigScreen extends Screen {
                                 width - 45, 20, Component.literal(currentValue));
                 this.input.setValue(currentValue);
                 this.input.setResponder((newValue) -> {
-
                     if (ListConfigScreen.this.validator.test(Collections.singletonList(newValue))) {
                         this.input.setTextColor(14737632);
                         ListConfigScreen.this.values.set(index, newValue);
                         ListConfigScreen.this.clearInvalid(index);
-                    } else {
+                    }
+                    else {
                         this.input.setTextColor(16711680);
                         ListConfigScreen.this.markInvalid(index);
                     }
@@ -232,4 +231,3 @@ public class ListConfigScreen extends Screen {
     }
 
 }
-

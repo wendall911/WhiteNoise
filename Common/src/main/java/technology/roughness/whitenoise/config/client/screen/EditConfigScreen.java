@@ -1,6 +1,8 @@
 package technology.roughness.whitenoise.config.client.screen;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
+import com.electronwill.nightconfig.core.concurrent.SynchronizedConfig;
+
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
+import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
 
 public class EditConfigScreen extends Screen {
@@ -76,7 +79,6 @@ public class EditConfigScreen extends Screen {
                     }
                 }).build());
         gridlayout$rowhelper.addChild(Button.builder(CommonComponents.GUI_CANCEL, (button) -> {
-
             if (this.minecraft != null) {
                 this.minecraft.setScreen(this.lastScreen);
             }
@@ -118,6 +120,7 @@ public class EditConfigScreen extends Screen {
         public ConfigList(final Map<String, Object> spec, final Map<String, Object> specValues) {
             super(Objects.requireNonNull(EditConfigScreen.this.minecraft), EditConfigScreen.this.width,
                     EditConfigScreen.this.height - 75, 43, 24);
+
             spec.forEach((key, obj) -> {
                 if (obj instanceof WhiteNoiseConfigSpec.ValueSpec value) {
                     Component nameComponent =
@@ -144,6 +147,7 @@ public class EditConfigScreen extends Screen {
                             comment = comment.substring(0, i);
                         }
                     }
+
                     List<FormattedCharSequence> list;
                     String s2;
                     ImmutableList.Builder<FormattedCharSequence> builder = ImmutableList.builder();
@@ -174,7 +178,8 @@ public class EditConfigScreen extends Screen {
                             .split(Component.literal(range)
                             .withStyle(ChatFormatting.GREEN), 150)
                             .forEach(builder::add);
-                    } else if (!allowed.isBlank()) {
+                    }
+                    else if (!allowed.isBlank()) {
                         EditConfigScreen.this.font
                             .split(Component.literal(allowed)
                             .withStyle(ChatFormatting.GREEN), 150)
@@ -207,7 +212,8 @@ public class EditConfigScreen extends Screen {
                                 enumValue.getEnumClass()
                             )
                         );
-                    } else if (current instanceof WhiteNoiseConfigSpec.ConfigValue<?>) {
+                    }
+                    else if (current instanceof WhiteNoiseConfigSpec.ConfigValue<?>) {
                         Object actualValue = EditConfigScreen.this.values.get(key);
 
                         if (actualValue instanceof List<?>) {
@@ -217,19 +223,24 @@ public class EditConfigScreen extends Screen {
                             this.addEntry(new StringConfigEntry(nameComponent, list, s2, key));
                         }
                     }
-                } else if (obj instanceof AbstractConfig abstractConfig &&
+                }
+                else if (obj instanceof AbstractConfig abstractConfig &&
                         specValues.get(key) instanceof AbstractConfig abstractConfig1 &&
-                        EditConfigScreen.this.values.get(key) instanceof AbstractConfig abstractConfig2) {
+                        EditConfigScreen.this.values.get(key) instanceof SynchronizedConfig synchronizedConfig) {
                     Component nameComponent = Component.literal(key);
+
                     this.addEntry(
                         new SectionEntry(
                             new ArrayList<>(),
                             nameComponent,
                             abstractConfig.valueMap(),
                             abstractConfig1.valueMap(),
-                            abstractConfig2.valueMap()
+                            synchronizedConfig.valueMap()
                         )
                     );
+                }
+                else {
+                    WhiteNoise.LOGGER.debug("Config section {} does not have a corresponding value", key);
                 }
             });
         }
@@ -535,7 +546,6 @@ public class EditConfigScreen extends Screen {
                 Object obj = EditConfigScreen.this.spec.get(key);
 
                 if (obj instanceof WhiteNoiseConfigSpec.ValueSpec valueSpec) {
-
                     if (valueSpec.test(newValue)) {
                         this.input.setTextColor(14737632);
                         EditConfigScreen.this.values.put(key, newValue);
@@ -641,4 +651,3 @@ public class EditConfigScreen extends Screen {
     }
 
 }
-

@@ -41,7 +41,7 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.EnumGetMethod;
-import com.electronwill.nightconfig.core.InMemoryFormat;
+import com.electronwill.nightconfig.core.InMemoryCommentedFormat;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.file.FileConfig;
 
@@ -330,7 +330,7 @@ public class WhiteNoiseConfigSpec {
     public static class Builder {
 
         private final Config storage =
-                Config.of(LinkedHashMap::new, InMemoryFormat.withUniversalSupport());
+                Config.of(LinkedHashMap::new, InMemoryCommentedFormat.withUniversalSupport());
         private final Map<List<String>, String> levelComments = new HashMap<>();
         private final Map<List<String>, String> levelTranslationKeys = new HashMap<>();
         private final List<String> currentPath = new ArrayList<>();
@@ -938,7 +938,7 @@ public class WhiteNoiseConfigSpec {
             context.ensureEmpty();
 
             Config valueCfg = Config.of(Config.getDefaultMapCreator(true, true),
-                    InMemoryFormat.withSupport(ConfigValue.class::isAssignableFrom));
+                    InMemoryCommentedFormat.withSupport(ConfigValue.class::isAssignableFrom));
             values.forEach(v -> valueCfg.set(v.getPath(), v));
 
             WhiteNoiseConfigSpec ret =
