@@ -16,4 +16,12 @@ public class ServicesBase {
         return loadedService;
     }
 
+    public static <T> T loadConditional(Logger logger, Class<T> clazz, String modid) {
+        if (Services.PLATFORM.isModLoaded(modid)) {
+            return load(logger, clazz);
+        }
+
+        return null;
+    }
+
 }
