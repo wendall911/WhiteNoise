@@ -9,12 +9,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import technology.roughness.whitenoise.WhiteNoise;
 
-import static technology.roughness.whitenoise.util.ResourceLocationHelper.loc;
-
 public class WhiteNoiseConfigPayload implements CustomPacketPayload {
 
     public static final Type<WhiteNoiseConfigPayload> TYPE =
-            new Type<>(loc(WhiteNoise.MODID, "sync"));
+            new Type<>(WhiteNoise.prefix("sync"));
     public static final StreamCodec<FriendlyByteBuf, WhiteNoiseConfigPayload> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.BYTE_ARRAY,
         packet -> packet.contents,

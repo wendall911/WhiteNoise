@@ -8,9 +8,12 @@ public class ResourceLocationHelper {
         return ResourceLocation.fromNamespaceAndPath(modid, path);
     }
 
-    public static ResourceLocation mcLoc(String path) {
+    public static ResourceLocation parse(String path) {
+        return ResourceLocation.parse(path);
+    }
+
+    public static ResourceLocation tryParse(String path) {
         return ResourceLocation.tryParse(path);
     }
 
 }
-
