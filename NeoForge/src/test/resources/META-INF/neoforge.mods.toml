@@ -1,18 +1,18 @@
 modLoader="javafml"
-loaderVersion="[2,)"
+loaderVersion="[4,)"
 license="LGPL-2.1-only"
 [[mods]]
-modId="whitenoisetest"
-version="1.0.0"
-displayName="WhiteNoiseTest"
-authors="wendall911"
-description='''
-A test mod for WhiteNoise.
-'''
+    modId="whitenoisetest"
+    version="1.0.0"
+    displayName="WhiteNoiseTest"
+    authors="wendall911"
+    description='''
+    A test mod for WhiteNoise.
+    '''
 [[dependencies.whitenoisetest]]
     modId="neoforge"
     type="required"
-    versionRange="[2,)"
+    versionRange="[4,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.whitenoisetest]]
