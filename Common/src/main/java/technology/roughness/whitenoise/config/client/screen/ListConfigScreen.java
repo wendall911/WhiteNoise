@@ -80,8 +80,8 @@ public class ListConfigScreen extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
         super.render(guiGraphics, x, y, delta);
         this.listConfig.render(guiGraphics, x, y, delta);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
-        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
+        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, -1);
     }
 
     private void updateDoneButton() {
@@ -149,8 +149,8 @@ public class ListConfigScreen extends Screen {
         }
 
         @Override
-        protected int getScrollbarPosition() {
-            return super.getScrollbarPosition() + 50;
+        protected int scrollBarX() {
+            return super.scrollBarX() + 50;
         }
 
     }
@@ -171,12 +171,12 @@ public class ListConfigScreen extends Screen {
                 this.input.setValue(currentValue);
                 this.input.setResponder((newValue) -> {
                     if (ListConfigScreen.this.validator.test(Collections.singletonList(newValue))) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(-1);
                         ListConfigScreen.this.values.set(index, newValue);
                         ListConfigScreen.this.clearInvalid(index);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(65536);
                         ListConfigScreen.this.markInvalid(index);
                     }
                 });

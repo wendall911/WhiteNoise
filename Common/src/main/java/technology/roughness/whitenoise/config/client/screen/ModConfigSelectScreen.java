@@ -51,7 +51,7 @@ public class ModConfigSelectScreen extends Screen {
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
         super.render(guiGraphics, x, y, delta);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
         this.configSelectionList.render(guiGraphics, x, y, delta);
     }
 
@@ -77,10 +77,6 @@ public class ModConfigSelectScreen extends Screen {
             if (this.getSelected() != null) {
                 this.centerScrollOn(this.getSelected());
             }
-        }
-
-        protected int getScrollbarPosition() {
-            return super.getScrollbarPosition() + 20;
         }
 
         public int getRowWidth() {
@@ -133,8 +129,7 @@ public class ModConfigSelectScreen extends Screen {
                 this.button.setPosition(ModConfigSelectionList.this.getRowLeft(), y);
                 this.button.render(guiGraphics, mouseX, mouseY, delta);
                 guiGraphics.drawString(ModConfigSelectScreen.this.font, this.type,
-                    ModConfigSelectScreen.this.width / 2 - 180, y + this.button.getHeight() / 2 - 3,
-                    16777215);
+                    ModConfigSelectScreen.this.width / 2 - 180, y + this.button.getHeight() / 2 - 3, -1);
             }
 
             public boolean mouseClicked(double x, double y, int button) {

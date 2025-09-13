@@ -97,8 +97,8 @@ public class EditConfigScreen extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
         super.render(guiGraphics, x, y, delta);
         this.configList.render(guiGraphics, x, y, delta);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
-        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
+        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, -1);
     }
 
     private void updateDoneButton() {
@@ -127,7 +127,7 @@ public class EditConfigScreen extends Screen {
                             Component.translatableWithFallback(value.getLocalizationKey() + ".name", key);
                     Component defaultComponent = Component.translatable("editGamerule.default",
                             Component.literal(value.getDefault().toString())).withStyle(ChatFormatting.GRAY);
-                    String s1 = value.getLocalizationKey() + ".description";
+                    String localizationKey = value.getLocalizationKey() + ".description";
                     String comment = value.getComment() != null ? value.getComment() : "";
                     String range = "";
                     String allowed = "";
@@ -149,14 +149,14 @@ public class EditConfigScreen extends Screen {
                     }
 
                     List<FormattedCharSequence> list;
-                    String s2;
+                    String text;
                     ImmutableList.Builder<FormattedCharSequence> builder = ImmutableList.builder();
                     builder.add(Component.literal(key).withStyle(ChatFormatting.YELLOW).getVisualOrderText());
 
-                    if (I18n.exists(s1)) {
-                        Component component3 = Component.translatable(s1);
+                    if (I18n.exists(localizationKey)) {
+                        Component component3 = Component.translatable(localizationKey);
                         EditConfigScreen.this.font.split(component3, 150).forEach(builder::add);
-                        s2 = component3.getString() + "\n" + defaultComponent.getString();
+                        text = component3.getString() + "\n" + defaultComponent.getString();
                     }
                     else {
                         List<Component> commentComponents = new ArrayList<>();
@@ -167,7 +167,7 @@ public class EditConfigScreen extends Screen {
                         for (Component commentComponent : commentComponents) {
                             EditConfigScreen.this.font.split(commentComponent, 150).forEach(builder::add);
                         }
-                        s2 = commentComponents
+                        text = commentComponents
                             .stream()
                             .map(Component::getString)
                             .collect(Collectors.joining()) + defaultComponent.getString();
@@ -191,23 +191,23 @@ public class EditConfigScreen extends Screen {
                     Object current = specValues.get(key);
 
                     if (current instanceof WhiteNoiseConfigSpec.IntValue) {
-                        this.addEntry(new IntegerConfigEntry(nameComponent, list, s2, key));
+                        this.addEntry(new IntegerConfigEntry(nameComponent, list, text, key));
                     }
                     else if (current instanceof WhiteNoiseConfigSpec.BooleanValue) {
-                        this.addEntry(new BooleanConfigEntry(nameComponent, list, s2, key));
+                        this.addEntry(new BooleanConfigEntry(nameComponent, list, text, key));
                     }
                     else if (current instanceof WhiteNoiseConfigSpec.DoubleValue) {
-                        this.addEntry(new DoubleConfigEntry(nameComponent, list, s2, key));
+                        this.addEntry(new DoubleConfigEntry(nameComponent, list, text, key));
                     }
                     else if (current instanceof WhiteNoiseConfigSpec.LongValue) {
-                        this.addEntry(new LongConfigEntry(nameComponent, list, s2, key));
+                        this.addEntry(new LongConfigEntry(nameComponent, list, text, key));
                     }
                     else if (current instanceof WhiteNoiseConfigSpec.EnumValue<?> enumValue) {
                         this.addEntry(
                             new EnumConfigEntry<>(
                                 nameComponent,
                                 list,
-                                s2,
+                                text,
                                 key,
                                 enumValue.getEnumClass()
                             )
@@ -217,10 +217,10 @@ public class EditConfigScreen extends Screen {
                         Object actualValue = EditConfigScreen.this.values.get(key);
 
                         if (actualValue instanceof List<?>) {
-                            this.addEntry(new ListConfigEntry(nameComponent, list, s2, key));
+                            this.addEntry(new ListConfigEntry(nameComponent, list, text, key));
                         }
                         else {
-                            this.addEntry(new StringConfigEntry(nameComponent, list, s2, key));
+                            this.addEntry(new StringConfigEntry(nameComponent, list, text, key));
                         }
                     }
                 }
@@ -250,18 +250,9 @@ public class EditConfigScreen extends Screen {
             return super.getRowWidth() + 100;
         }
 
-        @Override
-        protected int getScrollbarPosition() {
-            return super.getScrollbarPosition() + 50;
-        }
-
         public void renderWidget(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
             super.renderWidget(guiGraphics, x, y, delta);
-            ConfigEntry configEntry = this.getHovered();
-
-            if (configEntry != null && configEntry.tooltip != null) {
-                EditConfigScreen.this.setTooltipForNextRenderPass(configEntry.tooltip);
-            }
+            // TODO: implement tooltips, not working yet
         }
 
     }
@@ -303,7 +294,7 @@ public class EditConfigScreen extends Screen {
 
         @SuppressWarnings("unchecked")
         public ListConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
-                String p_101103_, String key) {
+                String text, String key) {
             super(pTooltip, pLabel);
             List<String> list = (List<String>) EditConfigScreen.this.values.get(key);
             String result = String.join(",", list.stream().map(Object::toString).toList());
@@ -343,7 +334,7 @@ public class EditConfigScreen extends Screen {
         private final CycleButton<Boolean> checkbox;
 
         public BooleanConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
-                String p_101103_, String key) {
+                String text, String key) {
             super(pTooltip, pLabel);
 
             this.checkbox = CycleButton
@@ -353,7 +344,7 @@ public class EditConfigScreen extends Screen {
                     (cycle) -> cycle
                         .createDefaultNarrationMessage()
                         .append("\n")
-                        .append(p_101103_)
+                        .append(text)
                 ).create(10, 5, 100, 20, pLabel,
                     (button, value) -> EditConfigScreen.this.values.put(key, value)
                 );
@@ -377,11 +368,11 @@ public class EditConfigScreen extends Screen {
         private final EditBox input;
 
         public IntegerConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
-                String p_101177_, String key) {
+                String text, String key) {
             super(pTooltip, pLabel);
             this.input = new EditBox(
                 Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                10, 5, 98, 20, pLabel.copy().append("\n").append(p_101177_).append("\n")
+                10, 5, 98, 20, pLabel.copy().append("\n").append(text).append("\n")
             );
             this.input.setValue(EditConfigScreen.this.values.get(key).toString());
             this.input.setResponder((newValue) -> {
@@ -399,12 +390,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(-2039584);
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(65536);
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -429,11 +420,11 @@ public class EditConfigScreen extends Screen {
         private final EditBox input;
 
         public LongConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
-                                                     String p_101177_, String key) {
+                 String text, String key) {
             super(pTooltip, pLabel);
             this.input = new EditBox(
                 Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                10, 5, 98, 20, pLabel.copy().append("\n").append(p_101177_).append("\n")
+                10, 5, 98, 20, pLabel.copy().append("\n").append(text).append("\n")
             );
             this.input.setValue(EditConfigScreen.this.values.get(key).toString());
             this.input.setResponder((newValue) -> {
@@ -451,12 +442,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(-2039584);
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(65536);
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -505,12 +496,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(-2039584);
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(65536);
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -533,12 +524,12 @@ public class EditConfigScreen extends Screen {
         private final EditBox input;
 
         public StringConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
-                String p_101177_, String key) {
+                String text, String key) {
             super(pTooltip, pLabel);
 
             this.input = new EditBox(
                 Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                10, 5, 98, 20, pLabel.copy().append("\n").append(p_101177_).append("\n")
+                10, 5, 98, 20, pLabel.copy().append("\n").append(text).append("\n")
             );
 
             this.input.setValue(EditConfigScreen.this.values.get(key).toString());
@@ -547,11 +538,11 @@ public class EditConfigScreen extends Screen {
 
                 if (obj instanceof WhiteNoiseConfigSpec.ValueSpec valueSpec) {
                     if (valueSpec.test(newValue)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(-2039584);
                         EditConfigScreen.this.values.put(key, newValue);
                         EditConfigScreen.this.clearInvalid(key);
                     } else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(65536);
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -576,7 +567,7 @@ public class EditConfigScreen extends Screen {
         private final CycleButton<Object> checkbox;
 
         public EnumConfigEntry(Component pLabel, List<FormattedCharSequence> pTooltip,
-                String p_101103_, String key, Class<T> clazz) {
+                String text, String key, Class<T> clazz) {
             super(pTooltip, pLabel);
 
             this.checkbox = CycleButton.builder((t) -> {
@@ -593,7 +584,7 @@ public class EditConfigScreen extends Screen {
                     EnumUtils.getEnum(clazz, EditConfigScreen.this.values.get(key).toString())
                 )
                 .displayOnlyValue().withCustomNarration(
-                    (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(p_101103_)
+                    (cycle) -> cycle.createDefaultNarrationMessage().append("\n").append(text)
                 )
                 .create(10, 5, 100, 20, pLabel,
                     (button, value) -> EditConfigScreen.this.values.put(key, value.toString()));
@@ -636,15 +627,14 @@ public class EditConfigScreen extends Screen {
         }
 
         protected void renderLabel(GuiGraphics guiGraphics, int y, int x) {
-
             if (this.label.size() == 1) {
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                        this.label.get(0), x, y + 5, 16777215, false);
+                    this.label.get(0), x, y + 5, -1, true);
             } else if (this.label.size() >= 2) {
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                        this.label.get(0), x, y, 16777215, false);
+                    this.label.get(0), x, y, -100, true);
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                        this.label.get(1), x, y + 10, 16777215, false);
+                    this.label.get(1), x, y + 10, -1, true);
             }
         }
 

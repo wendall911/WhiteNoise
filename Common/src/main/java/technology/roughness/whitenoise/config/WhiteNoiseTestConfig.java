@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.entity.EquipmentSlot;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -42,11 +42,11 @@ public class WhiteNoiseTestConfig {
         public final WhiteNoiseConfigSpec.BooleanValue booleanValue;
         public final WhiteNoiseConfigSpec.BooleanValue booleanValue1;
         public final WhiteNoiseConfigSpec.BooleanValue booleanValue2;
-        public final WhiteNoiseConfigSpec.EnumValue<ArmorItem.Type> enumValue1;
+        public final WhiteNoiseConfigSpec.EnumValue<EquipmentSlot> enumValue1;
         public final WhiteNoiseConfigSpec.ConfigValue<String> stringValue1;
         public final WhiteNoiseConfigSpec.ConfigValue<List<? extends String>> stringList1;
         public final WhiteNoiseConfigSpec.ConfigValue<List<? extends String>> validatedList1;
-        public final WhiteNoiseConfigSpec.EnumValue<ArmorItem.Type> enumValue;
+        public final WhiteNoiseConfigSpec.EnumValue<EquipmentSlot> enumValue;
         public final WhiteNoiseConfigSpec.ConfigValue<String> stringValue;
         public final WhiteNoiseConfigSpec.ConfigValue<List<? extends String>> stringList;
         public final WhiteNoiseConfigSpec.ConfigValue<List<? extends String>> validatedList;
@@ -65,7 +65,7 @@ public class WhiteNoiseTestConfig {
             this.stringValue1 =
                     builder.comment("String Value Comment").define("stringValue1", "String Value");
             this.enumValue1 =
-                    builder.comment("Enum Value Comment").defineEnum("enumValue1", ArmorItem.Type.BODY);
+                    builder.comment("Enum Value Comment").defineEnum("enumValue1", EquipmentSlot.BODY);
             this.stringList1 = builder.comment("String List Comment")
                     .defineList("stringList1", Arrays.asList("first", "second", "third"),
                             s -> s instanceof String);
@@ -77,7 +77,7 @@ public class WhiteNoiseTestConfig {
             this.stringValue =
                     builder.comment("String Value Comment").define("stringValue", "String Value");
             this.enumValue =
-                    builder.comment("Enum Value Comment").defineEnum("enumValue", ArmorItem.Type.BODY);
+                    builder.comment("Enum Value Comment").defineEnum("enumValue", EquipmentSlot.BODY);
             builder.pop();
 
             builder.comment("Nested Comment").push("second nested");
