@@ -2,6 +2,7 @@ package technology.roughness.whitenoise.config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorMaterials;
@@ -50,6 +51,8 @@ public class WhiteNoiseTestConfig {
         public final WhiteNoiseConfigSpec.ConfigValue<String> stringValue;
         public final WhiteNoiseConfigSpec.ConfigValue<List<? extends String>> stringList;
         public final WhiteNoiseConfigSpec.ConfigValue<List<? extends String>> validatedList;
+        private static final Predicate<Object> resourceLocationValidator = s -> s instanceof String
+            && ((String) s).matches("[a-z]+[:]{1}[a-z_]+");
 
         public Test(WhiteNoiseConfigSpec.Builder builder) {
 
@@ -71,7 +74,7 @@ public class WhiteNoiseTestConfig {
                             s -> s instanceof String);
             this.validatedList1 = builder.comment("Validated List Comment").defineList("listOfItems1",
                     Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
-                    s -> s instanceof String s1 && ResourceLocation.isValidResourceLocation(s1) && !s1.isBlank());
+                    resourceLocationValidator);
 
             builder.push("nested");
             this.stringValue =
@@ -86,7 +89,7 @@ public class WhiteNoiseTestConfig {
                             s -> s instanceof String);
             this.validatedList = builder.comment("Validated List Comment").defineList("listOfItems",
                     Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
-                    s -> s instanceof String s1 && ResourceLocation.isValidResourceLocation(s1));
+                    resourceLocationValidator);
             builder.pop();
         }
 
