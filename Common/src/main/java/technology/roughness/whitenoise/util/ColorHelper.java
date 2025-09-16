@@ -72,7 +72,7 @@ public class ColorHelper {
         RED("#FF5555"),
         LIGHT_PURPLE("#FF55FF"),
         YELLOW("#FFFF55"),
-        NEUTRAL("D9D8D4"),
+        NEUTRAL("#D9D8D4"),
         OFFWHITE("#E0E0E0"),
         ERROR_RED("#FF0000"),
         SPRING("#80C71F"),
@@ -96,6 +96,10 @@ public class ColorHelper {
 
         public int toRGBA() {
             return ColorHelper.hexToRGBA(this.hex);
+        }
+
+        public Color toColor() {
+            return ColorHelper.decodeHex(this.hex);
         }
 
     }
