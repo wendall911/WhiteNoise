@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
+import technology.roughness.whitenoise.util.ColorHelper;
 
 public class ModConfigSelectScreen extends Screen {
 
@@ -129,7 +130,7 @@ public class ModConfigSelectScreen extends Screen {
                 this.button.setPosition(ModConfigSelectionList.this.getRowLeft(), y);
                 this.button.render(guiGraphics, mouseX, mouseY, delta);
                 guiGraphics.drawString(ModConfigSelectScreen.this.font, this.type,
-                    ModConfigSelectScreen.this.width / 2 - 180, y + this.button.getHeight() / 2 - 3, -1);
+                    ModConfigSelectScreen.this.width / 2 - 180, y + this.button.getHeight() / 2 - 3, ColorHelper.Colors.WHITE.toRGBA());
             }
 
             public boolean mouseClicked(double x, double y, int button) {

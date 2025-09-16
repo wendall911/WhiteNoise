@@ -98,8 +98,8 @@ public class EditConfigScreen extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
         super.render(guiGraphics, x, y, delta);
         this.configList.render(guiGraphics, x, y, delta);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, -1);
-        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, -1);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, ColorHelper.Colors.WHITE.toRGBA());
+        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, ColorHelper.Colors.WHITE.toRGBA());
     }
 
     private void updateDoneButton() {
@@ -630,12 +630,12 @@ public class EditConfigScreen extends Screen {
         protected void renderLabel(GuiGraphics guiGraphics, int y, int x) {
             if (this.label.size() == 1) {
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                    this.label.get(0), x, y + 5, -1, true);
+                    this.label.get(0), x, y + 5, ColorHelper.Colors.WHITE.toRGBA(), true);
             } else if (this.label.size() >= 2) {
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                    this.label.get(0), x, y, -100, true);
+                    this.label.get(0), x, y, ColorHelper.Colors.WHITE.toRGBA(), true);
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                    this.label.get(1), x, y + 10, -1, true);
+                    this.label.get(1), x, y + 10, ColorHelper.Colors.WHITE.toRGBA(), true);
             }
         }
 
