@@ -1,6 +1,7 @@
 package technology.roughness.whitenoise.config.client.screen;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
+
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
+import technology.roughness.whitenoise.util.ColorHelper;
 
 public class EditConfigScreen extends Screen {
 
@@ -94,8 +96,8 @@ public class EditConfigScreen extends Screen {
 
     public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
         this.configList.render(guiGraphics, x, y, delta);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
-        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, ColorHelper.Colors.WHITE.toRGBA());
+        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, ColorHelper.Colors.WHITE.toRGBA());
         super.render(guiGraphics, x, y, delta);
     }
 
@@ -388,12 +390,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toRGBA());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -440,12 +442,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toRGBA());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -494,12 +496,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toRGBA());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -537,11 +539,11 @@ public class EditConfigScreen extends Screen {
                 if (obj instanceof WhiteNoiseConfigSpec.ValueSpec valueSpec) {
 
                     if (valueSpec.test(newValue)) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                         EditConfigScreen.this.values.put(key, newValue);
                         EditConfigScreen.this.clearInvalid(key);
                     } else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toRGBA());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -626,15 +628,14 @@ public class EditConfigScreen extends Screen {
         }
 
         protected void renderLabel(GuiGraphics guiGraphics, int y, int x) {
-
             if (this.label.size() == 1) {
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                        this.label.get(0), x, y + 5, 16777215, false);
+                        this.label.get(0), x, y + 5, ColorHelper.Colors.WHITE.toRGBA(), false);
             } else if (this.label.size() >= 2) {
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                        this.label.get(0), x, y, 16777215, false);
+                        this.label.get(0), x, y, ColorHelper.Colors.WHITE.toRGBA(), false);
                 guiGraphics.drawString(Objects.requireNonNull(EditConfigScreen.this.minecraft).font,
-                        this.label.get(1), x, y + 10, 16777215, false);
+                        this.label.get(1), x, y + 10, ColorHelper.Colors.WHITE.toRGBA(), false);
             }
         }
 

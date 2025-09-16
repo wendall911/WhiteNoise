@@ -2,14 +2,10 @@ package technology.roughness.whitenoise.util;
 
 /*
  * Helper class for color operations.
- * Minecraft now uses ARGB format for colors. (Not RGBA for some reason, why not just use Java AWT? Not LEDs, or do they have some future plans?)
- * Whatever Microsoft culture is that created moving from RGBA to ARGB, I don't like it. Culture fix needed.
  * This class provides methods to convert between different color formats.
  */
 
 import java.awt.Color;
-
-import net.minecraft.util.ARGB;
 
 public class ColorHelper {
 
@@ -24,12 +20,6 @@ public class ColorHelper {
         return Color.decode(hexString);
     }
 
-    public static int hexToARGB(String hex) {
-        Color color = decodeHex(hex);
-
-        return ARGB.color(color.getAlpha(), color.getRed(), color.getGreen(), color.getBlue());
-    }
-
     public static int hexToRGBA(String hex) {
         Color color = decodeHex(hex);
 
@@ -42,12 +32,6 @@ public class ColorHelper {
         return "#" + Integer.toHexString(color.getRGB() & 0xffffff);
     }
 
-    public static String ARGBtoHex(int argb) {
-        Color color = new Color((argb >> 16) & 0xff, (argb >> 8) & 0xff, argb & 0xff, (argb >> 24) & 0xff);
-
-        return "#" + Integer.toHexString(color.getRGB() & 0xffffff);
-    }
-    
     public enum Colors {
 
         BLACK("#000000"),
@@ -77,10 +61,6 @@ public class ColorHelper {
 
         public String getHex() {
             return hex;
-        }
-
-        public int toARGB() {
-            return ColorHelper.hexToARGB(this.hex);
         }
 
         public int toRGBA() {
