@@ -39,6 +39,7 @@ import net.minecraft.util.FormattedCharSequence;
 
 import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
+import technology.roughness.whitenoise.util.ColorHelper;
 
 public class EditConfigScreen extends Screen {
 
@@ -390,12 +391,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(-2039584);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(65536);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toARGB());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -442,12 +443,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(-2039584);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(65536);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toARGB());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -496,12 +497,12 @@ public class EditConfigScreen extends Screen {
                     }
 
                     if (flag && valueSpec.test(i)) {
-                        this.input.setTextColor(-2039584);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
                         EditConfigScreen.this.values.put(key, i);
                         EditConfigScreen.this.clearInvalid(key);
                     }
                     else {
-                        this.input.setTextColor(65536);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toARGB());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }
@@ -538,11 +539,11 @@ public class EditConfigScreen extends Screen {
 
                 if (obj instanceof WhiteNoiseConfigSpec.ValueSpec valueSpec) {
                     if (valueSpec.test(newValue)) {
-                        this.input.setTextColor(-2039584);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
                         EditConfigScreen.this.values.put(key, newValue);
                         EditConfigScreen.this.clearInvalid(key);
                     } else {
-                        this.input.setTextColor(65536);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toARGB());
                         EditConfigScreen.this.markInvalid(key);
                     }
                 }

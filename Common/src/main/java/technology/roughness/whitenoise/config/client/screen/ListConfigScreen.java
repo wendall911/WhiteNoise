@@ -24,6 +24,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
+import technology.roughness.whitenoise.util.ColorHelper;
+
 public class ListConfigScreen extends Screen {
 
     private final Set<Integer> invalidEntries = new HashSet<>();
@@ -108,7 +110,7 @@ public class ListConfigScreen extends Screen {
                 this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
             }
 
-            if (this.children().size() == 0) {
+            if (this.children().isEmpty()) {
                 this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
             }
         }
@@ -125,7 +127,7 @@ public class ListConfigScreen extends Screen {
                 this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
             }
 
-            if (this.children().size() == 0) {
+            if (this.children().isEmpty()) {
                 this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
             }
         }
@@ -138,7 +140,7 @@ public class ListConfigScreen extends Screen {
                 this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
             }
 
-            if (this.children().size() == 0) {
+            if (this.children().isEmpty()) {
                 this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
             }
         }
@@ -171,12 +173,12 @@ public class ListConfigScreen extends Screen {
                 this.input.setValue(currentValue);
                 this.input.setResponder((newValue) -> {
                     if (ListConfigScreen.this.validator.test(Collections.singletonList(newValue))) {
-                        this.input.setTextColor(-1);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
                         ListConfigScreen.this.values.set(index, newValue);
                         ListConfigScreen.this.clearInvalid(index);
                     }
                     else {
-                        this.input.setTextColor(65536);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toARGB());
                         ListConfigScreen.this.markInvalid(index);
                     }
                 });
