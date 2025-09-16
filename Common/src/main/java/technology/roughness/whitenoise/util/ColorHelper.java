@@ -47,6 +47,12 @@ public class ColorHelper {
 
         return "#" + Integer.toHexString(color.getRGB() & 0xffffff);
     }
+
+    public static int RGBAtoARGB(int rgba) {
+        Color color = new Color(rgba, true);
+
+        return ARGB.color(color.getAlpha(), color.getRed(), color.getGreen(), color.getBlue());
+    }
     
     public enum Colors {
 
@@ -66,8 +72,13 @@ public class ColorHelper {
         RED("#FF5555"),
         LIGHT_PURPLE("#FF55FF"),
         YELLOW("#FFFF55"),
+        NEUTRAL("D9D8D4"),
         OFFWHITE("#E0E0E0"),
-        ERROR_RED("#FF0000");
+        ERROR_RED("#FF0000"),
+        SPRING("#80C71F"),
+        SUMMER("#FFD83D"),
+        FALL("#F9801D"),
+        WINTER("#3AB3DA");
 
         private final String hex;
 
