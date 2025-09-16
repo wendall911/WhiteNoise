@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 
 import org.apache.commons.lang3.tuple.Pair;

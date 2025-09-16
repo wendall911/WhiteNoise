@@ -24,6 +24,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
+import technology.roughness.whitenoise.util.ColorHelper;
+
 public class ListConfigScreen extends Screen {
 
     private final Set<Integer> invalidEntries = new HashSet<>();
@@ -80,8 +82,8 @@ public class ListConfigScreen extends Screen {
     public void render(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
         super.render(guiGraphics, x, y, delta);
         this.listConfig.render(guiGraphics, x, y, delta);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, 16777215);
-        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, 16777215);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, ColorHelper.Colors.WHITE.toRGBA());
+        guiGraphics.drawCenteredString(this.font, this.subtitle, this.width / 2, 30, ColorHelper.Colors.WHITE.toRGBA());
     }
 
     private void updateDoneButton() {
@@ -108,7 +110,7 @@ public class ListConfigScreen extends Screen {
                 this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
             }
 
-            if (this.children().size() == 0) {
+            if (this.children().isEmpty()) {
                 this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
             }
         }
@@ -125,7 +127,7 @@ public class ListConfigScreen extends Screen {
                 this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
             }
 
-            if (this.children().size() == 0) {
+            if (this.children().isEmpty()) {
                 this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
             }
         }
@@ -138,7 +140,7 @@ public class ListConfigScreen extends Screen {
                 this.addEntry(new ListConfigScreen.Entry(i, this.getRowWidth()));
             }
 
-            if (this.children().size() == 0) {
+            if (this.children().isEmpty()) {
                 this.addEntry(new ListConfigScreen.Entry(-1, this.getRowWidth()));
             }
         }
@@ -171,12 +173,12 @@ public class ListConfigScreen extends Screen {
                 this.input.setValue(currentValue);
                 this.input.setResponder((newValue) -> {
                     if (ListConfigScreen.this.validator.test(Collections.singletonList(newValue))) {
-                        this.input.setTextColor(14737632);
+                        this.input.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                         ListConfigScreen.this.values.set(index, newValue);
                         ListConfigScreen.this.clearInvalid(index);
                     }
                     else {
-                        this.input.setTextColor(16711680);
+                        this.input.setTextColor(ColorHelper.Colors.ERROR_RED.toRGBA());
                         ListConfigScreen.this.markInvalid(index);
                     }
                 });
