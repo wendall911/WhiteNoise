@@ -253,7 +253,11 @@ public class EditConfigScreen extends Screen {
 
         public void renderWidget(@NotNull GuiGraphics guiGraphics, int x, int y, float delta) {
             super.renderWidget(guiGraphics, x, y, delta);
-            // TODO: implement tooltips, not working yet
+            ConfigEntry configEntry = this.getHovered();
+
+            if (configEntry != null && configEntry.tooltip != null) {
+                guiGraphics.setTooltipForNextFrame(configEntry.tooltip, x, y);
+            }
         }
 
     }
