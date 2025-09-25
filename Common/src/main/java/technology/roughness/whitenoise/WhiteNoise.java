@@ -24,6 +24,11 @@ import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import technology.roughness.whitenoise.config.ConfigHandler;
+import technology.roughness.whitenoise.config.WhiteNoiseConfig;
+import technology.roughness.whitenoise.config.WhiteNoiseConfigLoader;
+import technology.roughness.whitenoise.platform.Services;
+
 import static technology.roughness.whitenoise.util.ResourceLocationHelper.loc;
 
 public class WhiteNoise {
@@ -36,5 +41,10 @@ public class WhiteNoise {
         return loc(MODID, path);
     }
 
-}
+    public static void initConfig() {
+        if (Services.PLATFORM.isPhysicalClient()) {
+            WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.CLIENT, ConfigHandler.CLIENT_SPEC, MODID);
+        }
+    }
 
+}

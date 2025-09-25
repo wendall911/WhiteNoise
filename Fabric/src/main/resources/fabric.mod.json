@@ -27,6 +27,9 @@
     ],
     "modmenu": [
       "technology.roughness.whitenoise.integration.ModMenuPlugin"
+    ],
+    "whitenoise-config": [
+      "technology.roughness.whitenoise.FabricConfigInitializer"
     ]
   },
   "mixins": [

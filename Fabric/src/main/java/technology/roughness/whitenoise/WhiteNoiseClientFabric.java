@@ -22,9 +22,7 @@ package technology.roughness.whitenoise;
 import java.io.File;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 import net.minecraft.client.main.GameConfig;
 
@@ -32,17 +30,15 @@ import technology.roughness.whitenoise.config.WhiteNoiseConfigEvents;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigInitializer;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigNetwork;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigPayload;
+import technology.roughness.whitenoise.event.ToolTipEventListener;
 import technology.roughness.whitenoise.platform.FabricConfigHelper;
 
 public class WhiteNoiseClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            if (!client.isLocalServer()) {
-                WhiteNoiseConfigEvents.onUnloadServer();
-            }
-        });
+        ToolTipEventListener.init();
+
         ClientPlayNetworking.registerGlobalReceiver(WhiteNoiseConfigPayload.TYPE,
             (payload, context) -> {
                 byte[] contents = payload.contents;
@@ -62,4 +58,3 @@ public class WhiteNoiseClientFabric implements ClientModInitializer {
     }
 
 }
-

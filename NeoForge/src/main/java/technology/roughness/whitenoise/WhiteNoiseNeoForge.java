@@ -50,6 +50,7 @@ public class WhiteNoiseNeoForge {
         eventBus.addListener(this::loadConfigs);
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::registerPayloadHandler);
+        WhiteNoise.initConfig();
     }
 
     private void registerPayloadHandler(final RegisterPayloadHandlersEvent evt) {
