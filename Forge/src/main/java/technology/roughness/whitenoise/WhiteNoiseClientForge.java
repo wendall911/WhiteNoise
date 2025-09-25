@@ -25,11 +25,13 @@ import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 import technology.roughness.whitenoise.config.WhiteNoiseConfigEvents;
+import technology.roughness.whitenoise.event.ToolTipEventListener;
 
 public class WhiteNoiseClientForge {
 
     public static void setup() {
         MinecraftForge.EVENT_BUS.addListener(WhiteNoiseClientForge::onPlayerLoggedOut);
+        MinecraftForge.EVENT_BUS.register(ToolTipEventListener.class);
     }
 
     private static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggedOutEvent evt) {
@@ -39,4 +41,3 @@ public class WhiteNoiseClientForge {
     }
 
 }
-

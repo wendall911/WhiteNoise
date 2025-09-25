@@ -55,6 +55,7 @@ public class WhiteNoiseForge {
         eventBus.addListener(this::loadConfigs);
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
+        WhiteNoise.initConfig();
     }
 
     private void loadConfigs(final NewRegistryEvent evt) {

@@ -1,0 +1,11 @@
+{
+  "tooltip.whitenoise.ctrl": "Hold %s to show NBT Data",
+  "tooltip.whitenoise.ctrl_literal": "CTRL",
+  "tooltip.whitenoise.shift": "Hold %s to show Tags",
+  "tooltip.whitenoise.shift_literal": "SHIFT",
+  "tooltip.whitenoise.item_tags": "Item Tags",
+  "tooltip.whitenoise.block_tags": "Block Tags",
+  "tooltip.whitenoise.more": "%s more...",
+  "tooltip.whitenoise.durability": "Durability: %s",
+  "tooltip.whitenoise.nbt_length": "NBT Length: %s"
+}
