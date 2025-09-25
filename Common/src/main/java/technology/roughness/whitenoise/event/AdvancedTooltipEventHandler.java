@@ -1,11 +1,15 @@
 package technology.roughness.whitenoise.event;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import io.netty.buffer.Unpooled;
 
@@ -30,8 +34,6 @@ public class AdvancedTooltipEventHandler {
     public static void onItemTooltip(ItemStack itemStack, List<Component> toolTip) {
         if (itemStack != null && !itemStack.isEmpty()) {
             boolean hasTag = itemStack.hasTag();
-            CompoundTag itemStackTag = itemStack.getTag();
-
             if (ConfigHandler.Client.showAdvancedTooltips() && Minecraft.getInstance().options.advancedItemTooltips) {
                 if (hasTag) {
                     if (itemStack.getMaxDamage() != 0 && itemStack.getDamageValue() == 0) {
@@ -43,27 +45,23 @@ public class AdvancedTooltipEventHandler {
                     }
 
                     if (Screen.hasControlDown()) {
+                        CompoundTag itemStackTag = itemStack.getTag();
+
                         toolTip.add(
                             new TranslatableComponent("tooltip.whitenoise.nbt_length", getNBTSize(itemStackTag))
                                 .withStyle(ChatFormatting.GRAY)
                         );
 
                         if (itemStackTag != null) {
-                            String tagString = itemStackTag.toString();
-                            int length = 200;
+                            Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+                            String formattedString = gson.toJson(itemStackTag);
 
-                            if (tagString.length() > length) {
+                            List<String> lines = Arrays.stream(formattedString.split("\\n")).toList();
+
+                            for (String tagString : lines) {
                                 toolTip.add(
-                                    new TextComponent(tagString.substring(0, length))
-                                        .withStyle(ChatFormatting.GRAY)
+                                    new TextComponent(tagString).withStyle(ChatFormatting.GRAY)
                                 );
-                                toolTip.add(
-                                    new TranslatableComponent("tooltip.whitenoise.more", tagString.length() - length)
-                                        .withStyle(ChatFormatting.DARK_GRAY)
-                                );
-                            }
-                            else {
-                                toolTip.add(new TextComponent(tagString).withStyle(ChatFormatting.GRAY));
                             }
                         }
                     }
