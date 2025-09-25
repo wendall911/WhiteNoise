@@ -5,7 +5,6 @@
   "tooltip.whitenoise.shift_literal": "SHIFT",
   "tooltip.whitenoise.item_tags": "Item Tags",
   "tooltip.whitenoise.block_tags": "Block Tags",
-  "tooltip.whitenoise.more": "%s more...",
   "tooltip.whitenoise.durability": "Durability: %s",
   "tooltip.whitenoise.nbt_length": "NBT Length: %s"
 }
