@@ -34,11 +34,13 @@ import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigEvents;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigTracker;
 import technology.roughness.whitenoise.config.client.screen.ModConfigSelectScreen;
+import technology.roughness.whitenoise.event.ToolTipEventListener;
 
 public class WhiteNoiseClientForge {
 
     public static void setup() {
         MinecraftForge.EVENT_BUS.addListener(WhiteNoiseClientForge::onPlayerLoggedOut);
+        MinecraftForge.EVENT_BUS.register(ToolTipEventListener.class);
         ModList.get().forEachModContainer((modId, modContainer) -> {
             Map<String, Map<WhiteNoiseConfig.Type, Set<WhiteNoiseConfig>>> configs =
                 WhiteNoiseConfigTracker.INSTANCE.getConfigsByMod();
@@ -65,4 +67,3 @@ public class WhiteNoiseClientForge {
     }
 
 }
-

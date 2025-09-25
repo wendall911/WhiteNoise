@@ -30,23 +30,25 @@ import net.minecraft.client.main.GameConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigEvents;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigNetwork;
 import technology.roughness.whitenoise.config.WhiteNoiseInitializer;
+import technology.roughness.whitenoise.event.ToolTipEventListener;
 import technology.roughness.whitenoise.platform.FabricConfigHelper;
 
 public class WhiteNoiseClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+        ToolTipEventListener.init();
 
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             if (!client.isLocalServer()) {
                 WhiteNoiseConfigEvents.onUnloadServer();
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(WhiteNoiseFabric.CONFIG_SYNC,
-                (client, handler, buf, responseSender) -> {
-                    buf.retain();
-                    client.execute(() -> WhiteNoiseConfigNetwork.handleConfigSync(buf));
-                });
+            (client, handler, buf, responseSender) -> {
+                buf.retain();
+                client.execute(() -> WhiteNoiseConfigNetwork.handleConfigSync(buf));
+            });
     }
 
     public static void prepareConfigs(GameConfig gameConfig) {
