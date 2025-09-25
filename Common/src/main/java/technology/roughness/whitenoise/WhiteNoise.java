@@ -22,11 +22,22 @@ package technology.roughness.whitenoise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import technology.roughness.whitenoise.config.ConfigHandler;
+import technology.roughness.whitenoise.config.WhiteNoiseConfig;
+import technology.roughness.whitenoise.config.WhiteNoiseConfigLoader;
+import technology.roughness.whitenoise.platform.Services;
+
 public class WhiteNoise {
 
     public static final String MODID = "whitenoise";
     public static final String MOD_NAME = "WhiteNoise";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+
+    public static void initConfig() {
+        if (Services.PLATFORM.isPhysicalClient()) {
+            WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.CLIENT, ConfigHandler.CLIENT_SPEC, MODID);
+        }
+    }
 
 }
 
