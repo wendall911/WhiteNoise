@@ -1,24 +1,24 @@
 {
-    "schemaVersion": 1,
-    "id": "whitenoisetest",
-    "version": "1.0.0",
-    "name": "WhiteNoiseTest",
-    "description": "A test mod for WhiteNoise.",
-    "authors": [
-      "wendall911"
-    ],
-    "license": "LGPL-2.1-only",
-    "environment": "*",
-    "entrypoints": {
-      "whitenoise-config": [
-        "technology.roughness.whitenoise.WhiteNoiseTest"
-      ]
-    },
-    "mixins": [],
-    "depends": {
-      "fabricloader": ">=0.14",
-      "fabric": "*",
-      "minecraft": "*",
-      "java": ">=17"
-    }
+  "schemaVersion": 1,
+  "id": "${mod_id}test",
+  "version": "1.0.0",
+  "name": "${mod_name}Test",
+  "description": "A test mod for ${mod_name}.",
+  "authors": [
+    "${mod_author}"
+  ],
+  "license": "${license}",
+  "environment": "*",
+  "entrypoints": {
+    "whitenoise-config": [
+      "technology.roughness.whitenoise.WhiteNoiseTest"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": "${fabric_loader_min_version}",
+    "fabric": "*",
+    "minecraft": ${fabric_mc_version_range},
+    "java": ">=${java_version}"
+  }
 }
