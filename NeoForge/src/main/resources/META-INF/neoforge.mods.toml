@@ -1,15 +1,15 @@
 modLoader="javafml"
-loaderVersion = "${neoforge_loader_version_range}"
+loaderVersion="${neoforge_loader_version_range}"
 license="${license}"
-issueTrackerURL="${issue_tracker}"
+issueTrackerURL="https://github.com/${mod_author}/${mod_name}/issues"
 [[mods]]
     modId="${mod_id}"
     version="${version}"
     displayName="${mod_name}"
-    displayURL="${source_url}"
+    displayURL="https://github.com/${mod_author}/${mod_name}"
     logoFile="${mod_id}_icon.png"
-    credits="${mod_credits}"
     authors="${mod_author}"
+    credits="${mod_credits}"
     description='''
     ${mod_description}
     '''

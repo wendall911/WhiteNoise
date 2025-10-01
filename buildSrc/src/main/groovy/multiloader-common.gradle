@@ -24,7 +24,7 @@ repositories {
         }
         filter { includeGroupAndSubgroups('org.spongepowered') }
     }
-    
+
     exclusiveContent {
         forRepositories(
             maven {
@@ -58,16 +58,15 @@ repositories {
 }
 
 sourcesJar {
-    from(rootProject.file("LICENSE"))
-    from(rootProject.file("COPYING"))
-    from(rootProject.file("README.md"))
+    from(rootProject.file('LICENSE'))
+    from(rootProject.file('COPYING'))
+    from(rootProject.file('README.md'))
 }
 
 jar {
-    from(rootProject.file("LICENSE"))
-    from(rootProject.file("COPYING"))
-    from(rootProject.file("README.md"))
-
+    from(rootProject.file('LICENSE'))
+    from(rootProject.file('COPYING'))
+    from(rootProject.file('README.md'))
     manifest {
         attributes([
             'Specification-Title'     : mod_name,
@@ -84,29 +83,35 @@ jar {
     }
 }
 
-processResources {
-    def expandProps = [
-        'version': version,
-        'java_version': java_version,
-        'license': license,
-        'mod_id': mod_id,
-        'mod_author': mod_author,
-        'mod_description': mod_description,
-        'mod_name': mod_name,
-        'mod_credits': mod_credits,
-        'source_url': source_url,
-        'issue_tracker': issue_tracker,
-        'minecraft_version': minecraft_version,
-        'fabric_loader_min_version': fabric_loader_min_version,
-        'fabric_mc_version_range': fabric_mc_version_range,
-        'neoforge_loader_version_range': neoforge_loader_version_range,
-        'neoforge_mc_version_range': neoforge_mc_version_range
-    ]
+ext.expandProps = [
+    'version': version,
+    'java_version': java_version,
+    'license': license,
+    'mod_id': mod_id,
+    'mod_author': mod_author,
+    'mod_description': mod_description,
+    'mod_display_name': mod_display_name,
+    'mod_name': mod_name,
+    'minecraft_version': minecraft_version,
+    'fabric_loader_min_version': fabric_loader_min_version,
+    'fabric_mc_version_range': fabric_mc_version_range,
+    'neoforge_loader_version_range': neoforge_loader_version_range,
+    'neoforge_mc_version_range': neoforge_mc_version_range,
+    'mod_credits': mod_credits,
+    'pack_format': pack_format
+]
+ext.resourceTargets = ['pack.mcmeta', 'fabric.mod.json', 'META-INF/neoforge.mods.toml']
 
-    filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
+processResources {
+    filesMatching(resourceTargets) {
         expand expandProps
     }
     inputs.properties(expandProps)
+}
+processTestResources {
+    filesMatching(resourceTargets) {
+        expand(project.properties)
+    }
 }
 
 publishing {
