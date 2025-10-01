@@ -1,13 +1,13 @@
 {
     "schemaVersion": 1,
-    "id": "whitenoisetest",
+    "id": "${mod_id}test",
     "version": "1.0.0",
-    "name": "WhiteNoiseTest",
-    "description": "A test mod for WhiteNoise.",
+    "name": "${mod_name}Test",
+    "description": "A test mod for ${mod_name}.",
     "authors": [
-      "wendall911"
+      "${mod_author}"
     ],
-    "license": "LGPL-2.1-only",
+    "license": "${license}",
     "environment": "*",
     "entrypoints": {
       "whitenoise": [
@@ -16,9 +16,9 @@
     },
     "mixins": [],
     "depends": {
-      "fabricloader": ">=0.14",
+      "fabricloader": "${fabric_loader_min_version}",
       "fabric": "*",
-      "minecraft": "*",
-      "java": ">=17"
+      "minecraft": "${fabric_mc_version_range}",
+      "java": ">=${java_version}"
     }
 }

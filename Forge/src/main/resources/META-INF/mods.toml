@@ -1,19 +1,18 @@
 modLoader="javafml"
 loaderVersion="${forge_version_range}"
 license="${license}"
-issueTrackerURL="${issue_tracker}"
-logoFile="${mod_id}_icon.png"
-logoBlur=false
+issueTrackerURL="https://github.com/${mod_author}/${mod_name}/issues"
+
 [[mods]]
     modId="${mod_id}"
     version="${version}"
     displayName="${mod_name}"
+    displayURL="https://github.com/${mod_author}/${mod_name}"
     authors="${mod_author}"
     credits="${mod_credits}"
     description='''
     ${mod_description}
     '''
-    displayURL="${source}"
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true

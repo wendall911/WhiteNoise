@@ -4,16 +4,19 @@
   "version": "${version}",
   "name": "${mod_name}",
   "description": "${mod_description}",
-  "icon": "${mod_id}_icon.png",
   "authors": [
     "${mod_author}"
   ],
+  "contributors": [
+    "${mod_credits}"
+  ],
   "contact": {
-    "homepage": "${source}",
-    "issues": "${issue_tracker}",
-    "sources": "${source}"
+    "homepage": "https://github.com/${mod_author}/${mod_name}",
+    "issues": "https://github.com/${mod_author}/${mod_name}/issues",
+    "sources": "https://github.com/${mod_author}/${mod_name}"
   },
   "license": "${license}",
+  "icon": "${mod_id}_icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -46,7 +49,6 @@
     "fabricloader": "${fabric_loader_min_version}",
     "fabric": "*",
     "minecraft": "${fabric_mc_version_range}",
-    "java": ">=17"
+    "java": ">=${java_version}"
   }
 }
-  

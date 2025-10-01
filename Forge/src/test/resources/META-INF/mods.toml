@@ -1,31 +1,31 @@
 modLoader="javafml"
-loaderVersion="[46,)"
-license="LGPL-2.1-only"
+loaderVersion="${forge_version_range}"
+license="${license}"
 [[mods]]
-    modId="whitenoisetest"
+    modId="${mod_id}test"
     version="1.0.0"
-    displayName="WhiteNoiseTest"
-    authors="wendall911"
+    displayName="${mod_name}Test"
+    authors="${mod_author}"
     description='''
-    A test mod for WhiteNoise.
+    A test mod for ${mod_name}
     '''
 [[mods]]
     modId="whitenoise"
     version="1.0.0"
-    displayName="WhiteNoise"
-    authors="wendall911"
+    displayName="${mod_name}"
+    authors="${mod_author}"
     description='''
-    Cross-platform library for wendall911's mods.
+    ${mod_description}
     '''
-[[dependencies.whitenoisetest]]
+[[dependencies.${mod_id}test]]
     modId="forge"
     mandatory=true
-    versionRange="[46,)"
+    versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
-[[dependencies.whitenoisetest]]
+[[dependencies.${mod_id}test]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20,1.21)"
+    versionRange="${forge_mc_version_range}"
     ordering="NONE"
     side="BOTH"

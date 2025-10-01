@@ -52,13 +52,20 @@ sourceSets {
     }
 }
 
-def resourceTargets = ['fabric.mod.json', 'pack.mcmeta']
-def replaceProperties = [
-    'version': version, 'fabric_mc_version_range': fabric_mc_version_range,
-    'license': license, 'mod_id': mod_id, 'mod_author': mod_author,
-    'mod_description': mod_description, 'mod_name': mod_name,
-    'fabric_loader_version': fabric_loader_version, 'source': source,
-    'issue_tracker': issue_tracker, 'fabric_loader_min_version': fabric_loader_min_version
+ext.resourceTargets = ['fabric.mod.json', 'pack.mcmeta']
+ext.replaceProperties = [
+    'version': version,
+    'fabric_mc_version_range': fabric_mc_version_range,
+    'license': license,
+    'mod_id': mod_id,
+    'mod_author': mod_author,
+    'mod_description': mod_description,
+    'mod_display_name': mod_display_name,
+    'mod_name': mod_name,
+    'fabric_loader_min_version': fabric_loader_min_version,
+    'mod_credits': mod_credits,
+    'java_version': java_version,
+    'pack_format': pack_format
 ]
 
 processResources {
@@ -69,6 +76,12 @@ processResources {
 
     filesMatching(resourceTargets) {
         expand replaceProperties
+    }
+}
+
+processTestResources {
+    filesMatching(resourceTargets) {
+        expand(project.properties)
     }
 }
 
