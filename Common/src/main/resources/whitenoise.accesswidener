@@ -1,0 +1,7 @@
+accessWidener v2 named
+
+accessible method net/minecraft/client/gui/components/AbstractSelectionList clearEntries ()V
+accessible method net/minecraft/client/gui/screens/worldselection/WorldSelectionList clearEntries ()V
+accessible field net/minecraft/client/OptionInstance caption Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/OptionInstance toString Ljava/util/function/Function;
+accessible class net/minecraft/client/OptionInstance$ValueSet

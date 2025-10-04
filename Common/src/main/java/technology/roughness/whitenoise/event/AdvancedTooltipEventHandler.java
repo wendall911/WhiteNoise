@@ -6,16 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.Nullable;
-
-import io.netty.buffer.Unpooled;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.component.TypedDataComponent;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -37,7 +30,8 @@ public class AdvancedTooltipEventHandler {
 
     public static void onItemTooltip(ItemStack itemStack, List<Component> toolTip) {
         if (itemStack != null && !itemStack.isEmpty()) {
-            if (ConfigHandler.Client.showAdvancedTooltips() && Minecraft.getInstance().options.advancedItemTooltips) {
+            Minecraft mc = Minecraft.getInstance();
+            if (ConfigHandler.Client.showAdvancedTooltips() && mc.options.advancedItemTooltips) {
                 if (itemStack.getMaxDamage() != 0 && itemStack.getDamageValue() == 0) {
                     toolTip.add(
                         1,
@@ -46,7 +40,7 @@ public class AdvancedTooltipEventHandler {
                     );
                 }
 
-                if (Screen.hasControlDown()) {
+                if (mc.hasControlDown()) {
                     for (TypedDataComponent<?> typedDataComponent : itemStack.getComponents()) {
                         Object value = typedDataComponent.value();
                         String unformatted = MessageFormatter.format("{}", value).getMessage();
@@ -92,7 +86,7 @@ public class AdvancedTooltipEventHandler {
 
                 Collection<ResourceLocation> tags = getTags(itemStack.getTags());
 
-                if (Screen.hasShiftDown()) {
+                if (mc.hasShiftDown()) {
                     Block block = Block.byItem(itemStack.getItem());
 
                     if (!tags.isEmpty()) {
@@ -139,15 +133,6 @@ public class AdvancedTooltipEventHandler {
             }
 
         }
-    }
-
-    private static int getNBTSize(@Nullable CompoundTag nbt) {
-        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-
-        buffer.writeNbt(nbt);
-        buffer.release();
-
-        return buffer.writerIndex();
     }
 
     public static <T> Collection<ResourceLocation> getTags(Stream<TagKey<T>> tags) {

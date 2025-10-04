@@ -26,7 +26,7 @@ public class NeoForgePlatform implements IPlatform {
 
     @Override
     public boolean isPhysicalClient() {
-        return FMLLoader.getDist() == Dist.CLIENT;
+        return FMLLoader.getCurrent().getDist() == Dist.CLIENT;
     }
 
     @Override

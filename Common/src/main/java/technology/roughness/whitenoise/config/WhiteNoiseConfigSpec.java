@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,10 +31,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -50,9 +55,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import technology.roughness.whitenoise.WhiteNoise;
 
@@ -145,10 +147,12 @@ public class WhiteNoiseConfigSpec {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void afterReload() {
         this.resetCaches(getValues().valueMap().values());
     }
 
+    @SuppressWarnings("deprecation")
     private void resetCaches(final Iterable<Object> configValues) {
         configValues.forEach(value -> {
             if (value instanceof final ConfigValue<?> configValue) {
@@ -201,6 +205,7 @@ public class WhiteNoiseConfigSpec {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private int correct(UnmodifiableConfig spec, CommentedConfig config,
             @Nullable Map<String, Object> defaultValues,
             LinkedList<String> parentPath, List<String> parentPathUnmodifiable,
@@ -319,12 +324,16 @@ public class WhiteNoiseConfigSpec {
 
     private boolean stringsMatchIgnoringNewlines(@Nullable Object obj1, @Nullable Object obj2) {
         if (obj1 instanceof String string1 && obj2 instanceof String string2) {
-            if (string1.length() > 0 && string2.length() > 0) {
+            if (!string1.isEmpty() && !string2.isEmpty()) {
                 return string1.replaceAll("\r\n", "\n").equals(string2.replaceAll("\r\n", "\n"));
             }
         }
 
         return Objects.equals(obj1, obj2);
+    }
+
+    public String getLevelTranslationKey(ArrayList<String> strings) {
+        return this.levelLocalizationKeys.get(strings);
     }
 
     public static class Builder {
@@ -934,6 +943,7 @@ public class WhiteNoiseConfigSpec {
             return Pair.of(o, this.build());
         }
 
+        @SuppressWarnings("deprecation")
         public WhiteNoiseConfigSpec build() {
             context.ensureEmpty();
 
@@ -1054,7 +1064,7 @@ public class WhiteNoiseConfigSpec {
     }
 
     @SuppressWarnings("unused")
-    private static class Range<V extends Comparable<? super V>> implements Predicate<Object> {
+    public static class Range<V extends Comparable<? super V>> implements Predicate<Object> {
         
         private final Class<? extends V> clazz;
         private final V min;
@@ -1064,6 +1074,10 @@ public class WhiteNoiseConfigSpec {
             this.clazz = clazz;
             this.min = min;
             this.max = max;
+        }
+
+        public static Range<Integer> of(int minValue, int maxValue) {
+            return new Range<>(Integer.class, minValue, maxValue);
         }
 
         public Class<? extends V> getClazz() {
@@ -1207,6 +1221,88 @@ public class WhiteNoiseConfigSpec {
             return _default;
         }
 
+        public String getTranslationKey() {
+            return langKey;
+        }
+
+        public RestartType restartType() {
+            if (needsWorldRestart()) {
+                return RestartType.WORLD;
+            }
+
+            return RestartType.NONE;
+        }
+
+        /*
+         * Used in the UI to add new elements to a list config.
+         * Here we are assuming that if the supplier returns a List, it is a list of strings.
+         */
+        public Supplier<?> getNewElementSupplier() {
+            if (supplier.get() instanceof List<?>) {;
+                    return () -> "";
+            }
+
+            return supplier;
+        }
+
+        public Range<Integer> getSizeRange() {
+            return Range.of(0, Integer.MAX_VALUE);
+        }
+
+    }
+
+    public static class ListValueSpec extends ValueSpec {
+        private static final Range<Integer> MAX_ELEMENTS = Range.of(0, Integer.MAX_VALUE);
+        private static final Range<Integer> NON_EMPTY = Range.of(1, Integer.MAX_VALUE);
+
+        @Nullable
+        private final Supplier<?> newElementSupplier;
+        @Nullable
+        private final Range<Integer> sizeRange;
+        private final Predicate<Object> elementValidator;
+
+        private ListValueSpec(Supplier<?> supplier, @Nullable Supplier<?> newElementSupplier, Predicate<Object> listValidator, Predicate<Object> elementValidator, BuilderContext context, @Nullable Range<Integer> sizeRange) {
+            super(supplier, listValidator, context);
+            Objects.requireNonNull(elementValidator, "ElementValidator can not be null");
+
+            this.newElementSupplier = newElementSupplier;
+            this.elementValidator = elementValidator;
+            this.sizeRange = Objects.requireNonNullElse(sizeRange, MAX_ELEMENTS);
+        }
+
+        /**
+         * Creates a new empty element that can be added to the end of the list or null if the list doesn't support adding elements.<p>
+         *
+         * The element does not need to validate with either {@link #test(Object)} or {@link #testElement(Object)}, but it should give the user a good starting point for their edit.<p>
+         *
+         * Only used by the UI!
+         */
+        @Nullable
+        public Supplier<?> getNewElementSupplier() {
+            return newElementSupplier;
+        }
+
+        /**
+         * Determines if a given object can be part of the list.<p>
+         *
+         * Note that the list-level validator overrules this.<p>
+         *
+         * Only used by the UI!
+         */
+        public boolean testElement(Object value) {
+            return elementValidator.test(value);
+        }
+
+        /**
+         * The allowable range of the size of the list.
+         * <p>
+         * Note that the validator overrules this.
+         * <p>
+         * Only used by the UI!
+         */
+        public @Nullable Range<Integer> getSizeRange() {
+            return sizeRange;
+        }
     }
 
     public static class ConfigValue<T> implements Supplier<T> {
@@ -1243,6 +1339,13 @@ public class WhiteNoiseConfigSpec {
 
         protected T getRaw(Config config, List<String> path, Supplier<T> defaultSupplier) {
             return config.getOrElse(path, defaultSupplier);
+        }
+
+        /*
+         * Gets the raw value from the config, bypassing any caching. Used for editing the value.
+         */
+        public T getRaw() {
+            return getRaw(spec.config, path, defaultSupplier);
         }
 
         public T getDefault() {
@@ -1370,6 +1473,27 @@ public class WhiteNoiseConfigSpec {
             return config.getEnumOrElse(path, clazz, converter, defaultSupplier);
         }
 
+    }
+
+    public enum RestartType {
+        NONE,
+        WORLD,
+        GAME(WhiteNoiseConfig.Type.SERVER);
+
+        private final Set<WhiteNoiseConfig.Type> invalidTypes;
+
+        RestartType(WhiteNoiseConfig.Type... invalidTypes) {
+            this.invalidTypes = EnumSet.noneOf(WhiteNoiseConfig.Type.class);
+            this.invalidTypes.addAll(Arrays.asList(invalidTypes));
+        }
+
+        private boolean isValid(WhiteNoiseConfig.Type type) {
+            return !invalidTypes.contains(type);
+        }
+
+        public RestartType with(RestartType other) {
+            return other == NONE ? this : (other == GAME || this == GAME) ? GAME : WORLD;
+        }
     }
 
 }

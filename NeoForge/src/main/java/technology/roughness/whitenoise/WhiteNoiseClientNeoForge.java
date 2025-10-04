@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
 
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -34,10 +33,11 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
+import technology.roughness.whitenoise.common.WhiteNoiseModContainer;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigEvents;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigTracker;
-import technology.roughness.whitenoise.config.client.screen.ModConfigSelectScreen;
+import technology.roughness.whitenoise.config.client.screen.ConfigurationScreen;
 import technology.roughness.whitenoise.event.ToolTipEventListener;
 
 public class WhiteNoiseClientNeoForge {
@@ -51,6 +51,12 @@ public class WhiteNoiseClientNeoForge {
                     WhiteNoiseConfigTracker.INSTANCE.getConfigsByMod();
             Map<WhiteNoiseConfig.Type, Set<WhiteNoiseConfig>> modConfigs = configs.get(modId);
 
+            WhiteNoiseModContainer wnModContainer = new WhiteNoiseModContainer(
+                modId,
+                modContainer.getModInfo().getDisplayName(),
+                modConfigs
+            );
+
             if (modConfigs != null && !modConfigs.isEmpty()) {
                 int count = modConfigs.values().stream().mapToInt(Set::size).sum();
                 WhiteNoise.LOGGER.info("Registering config screens for mod {} with {} config(s)", modId, count);
@@ -58,8 +64,7 @@ public class WhiteNoiseClientNeoForge {
                     @NotNull
                     @Override
                     public Screen createScreen(@NotNull ModContainer modContainer1, @NotNull Screen screen) {
-                        return new ModConfigSelectScreen(modConfigs, screen,
-                                Component.literal(modContainer1.getModInfo().getDisplayName()));
+                        return new ConfigurationScreen(wnModContainer, screen);
                     }
                 });
             }
