@@ -70,6 +70,7 @@ import net.minecraft.util.Mth;
 
 import org.lwjgl.glfw.GLFW;
 
+import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig.Type;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
@@ -618,6 +619,20 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             return component;
         }
 
+        protected MutableComponent getSectionTranslationComponent(final String key) {
+            return getSectionTranslationComponent(key, false);
+        }
+
+        protected MutableComponent getSectionTranslationComponent(final String key, boolean tooltip) {
+            MutableComponent component = Component.empty().append(translationUtil.getWithLiteralFallback(getTranslationKeyName(key), key));
+
+            if (tooltip) {
+                component.withStyle(ChatFormatting.YELLOW);
+            }
+
+            return component;
+        }
+
         protected String getComment(final ValueSpec valueSpec) {
             if (valueSpec == null) {
                 return "";
@@ -638,8 +653,14 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             String allowed = "";
             final boolean hasTranslatedTooltip = translationUtil.exists(tooltipKey);
 
-            MutableComponent component = Component.empty()
-                .append(getTranslationComponent(key, valueSpec, true));
+            MutableComponent component = Component.empty();
+
+            if (valueSpec != null) {
+                component.append(getTranslationComponent(key, valueSpec, true));
+            }
+            else {
+                component.append(getSectionTranslationComponent(key, true));
+            }
 
             if (!comment.isBlank()) {
                 int i = comment.indexOf("Range:");
@@ -1137,8 +1158,9 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             if (minecraft == null || subconfig.isEmpty()) {
                 return null;
             }
+
             return new Element(
-                Component.translatable(SECTION, getTranslationComponent(key, spec)),
+                Component.translatable(SECTION, getSectionTranslationComponent(key)),
                 getTooltipComponent(key, spec),
                 Button.builder(
                     Component.translatable(SECTION, Component.translatable(SECTION_TEXT)),
@@ -1151,7 +1173,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                                 subconfig.valueMap(),
                                 key,
                                 subsection.entrySet(),
-                                getTranslationComponent(key, spec)
+                                getSectionTranslationComponent(key)
                             ).rebuild()
                         )
                     )

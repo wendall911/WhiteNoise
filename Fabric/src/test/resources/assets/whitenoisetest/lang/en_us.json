@@ -1,4 +1,8 @@
 {
+  "whitenoisetest.configuration.listofitems1.name": "List of Items",
+  "whitenoisetest.configuration.listofitems1.description": "A list of string items.",
+  "whitenoisetest.configuration.nested.name": "Nested Config Option",
+  "whitenoisetest.configuration.nested.description": "Some information about the nested config option.",
   "gui.intValue.name": "Localized Integer Value",
   "gui.doubleValue.description": "Localized Double Value Description"
 }
