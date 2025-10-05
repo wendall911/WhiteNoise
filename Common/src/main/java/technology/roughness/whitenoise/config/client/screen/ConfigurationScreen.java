@@ -70,7 +70,6 @@ import net.minecraft.util.Mth;
 
 import org.lwjgl.glfw.GLFW;
 
-import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig.Type;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
@@ -881,7 +880,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                     box.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
                     return;
                 }
-                box.setTextColor(ColorHelper.Colors.YELLOW.toARGB());
+                box.setTextColor(ColorHelper.Colors.ERROR_RED.toARGB());
             });
 
             return new Element(getTranslationComponent(key, spec), getTooltipComponent(key, spec), box);
@@ -1122,7 +1121,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                     // field probably is just empty/partial, ignore that
                 }
 
-                box.setTextColor(ColorHelper.Colors.YELLOW.toARGB());
+                box.setTextColor(ColorHelper.Colors.ERROR_RED.toARGB());
             });
 
             return new Element(getTranslationComponent(key, spec), getTooltipComponent(key, spec), box);
