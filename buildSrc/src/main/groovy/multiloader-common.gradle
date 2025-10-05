@@ -97,8 +97,7 @@ ext.expandProps = [
     'fabric_mc_version_range': fabric_mc_version_range,
     'neoforge_loader_version_range': neoforge_loader_version_range,
     'neoforge_mc_version_range': neoforge_mc_version_range,
-    'mod_credits': mod_credits,
-    'pack_format': pack_format
+    'mod_credits': mod_credits
 ]
 ext.resourceTargets = ['pack.mcmeta', 'fabric.mod.json', 'META-INF/neoforge.mods.toml']
 
