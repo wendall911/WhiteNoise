@@ -60,14 +60,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
-
-import org.lwjgl.glfw.GLFW;
 
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig.Type;
@@ -885,7 +882,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                     box.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                     return;
                 }
-                box.setTextColor(ColorHelper.Colors.YELLOW.toRGBA());
+                box.setTextColor(ColorHelper.Colors.ERROR_RED.toRGBA());
             });
 
             return new Element(getTranslationComponent(key, spec), getTooltipComponent(key, spec), box);
@@ -1126,7 +1123,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                     // field probably is just empty/partial, ignore that
                 }
 
-                box.setTextColor(ColorHelper.Colors.YELLOW.toRGBA());
+                box.setTextColor(ColorHelper.Colors.ERROR_RED.toRGBA());
             });
 
             return new Element(getTranslationComponent(key, spec), getTooltipComponent(key, spec), box);
