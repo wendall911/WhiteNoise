@@ -15,6 +15,7 @@ public class ConfigHandler {
 
     public static final class Client {
         private final WhiteNoiseConfigSpec.BooleanValue showAdvancedTooltips;
+        private final WhiteNoiseConfigSpec.BooleanValue logTranslatableWarnings;
 
         Client(WhiteNoiseConfigSpec.Builder builder) {
             showAdvancedTooltips = builder
@@ -23,10 +24,21 @@ public class ConfigHandler {
                     "Shows NBT data, tags and durability information."
                 )
                 .define("showAdvancedTooltips", false);
+            logTranslatableWarnings = builder
+                .comment(
+                    "Log warnings for missing translation keys.",
+                    "If enabled, missing translation keys will be logged to the console.",
+                    "This can help identify missing translations in the mod."
+                )
+                .define("logTranslatableWarnings", true);
         }
 
         public static boolean showAdvancedTooltips() {
             return CLIENT.showAdvancedTooltips.get();
+        }
+
+        public static boolean logTranslatableWarnings() {
+            return CLIENT.logTranslatableWarnings.get();
         }
 
     }

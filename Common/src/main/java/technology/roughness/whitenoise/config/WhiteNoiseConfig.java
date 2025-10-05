@@ -123,7 +123,8 @@ public class WhiteNoiseConfig {
     public enum Type {
         COMMON,
         CLIENT,
-        SERVER;
+        SERVER,
+        STARTUP;
 
         public String suffix() {
             return name().toLowerCase(Locale.ROOT);

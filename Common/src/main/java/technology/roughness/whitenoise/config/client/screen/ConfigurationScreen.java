@@ -24,6 +24,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.minecraft.client.gui.screens.GenericMessageScreen;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,8 +60,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.CommonComponents;
@@ -70,7 +69,6 @@ import net.minecraft.util.Mth;
 
 import org.lwjgl.glfw.GLFW;
 
-import technology.roughness.whitenoise.WhiteNoise;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig.Type;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
@@ -85,17 +83,28 @@ import technology.roughness.whitenoise.util.TranslationUtil;
 
 public final class ConfigurationScreen extends OptionsSubScreen {
     private static final class TooltipConfirmScreen extends ConfirmScreen {
+        boolean seenYes = false;
+
         private TooltipConfirmScreen(BooleanConsumer callback, Component title, Component message,
                 Component yesButton, Component noButton) {
             super(callback, title, message, yesButton, noButton);
         }
 
         @Override
-        protected void addButtons(@NotNull LinearLayout layout) {
-            super.addButtons(layout);
-            if (this.noButton != null) {
-                this.noButton.setTooltip(Tooltip.create(RESTART_NO_TOOLTIP));
+        protected void init() {
+            seenYes = false;
+            super.init();
+        }
+
+        @Override
+        protected void addExitButton(@NotNull Button button) {
+            if (seenYes) {
+                button.setTooltip(Tooltip.create(RESTART_NO_TOOLTIP));
             }
+            else {
+                seenYes = true;
+            }
+            super.addExitButton(button);
         }
     }
 
@@ -183,6 +192,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         translationUtil.translatable(LANG_PREFIX + "restart.server.title");
     public static final Component SERVER_RESTART_MESSAGE =
         translationUtil.translatable(LANG_PREFIX + "restart.server.text");
+    public static final Component SAVING_LEVEL = Component.translatable("menu.savingLevel"); // PauseScreen.SAVING_LEVEL
     public static final Component RETURN_TO_MENU =
         translationUtil.translatable("menu.returnToMenu"); // PauseScreen.RETURN_TO_MENU
     public static final Component RESTART_NO =
@@ -297,13 +307,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         }
         if (count == 1) {
             autoClose = true;
-            btn.onPress(
-                new MouseButtonEvent(
-                    btn.getX() + btn.getWidth() / 2.,
-                    btn.getY() + btn.getHeight() / 2.,
-                    new MouseButtonInfo(GLFW.GLFW_MOUSE_BUTTON_LEFT, 0)
-                )
-            );
+            btn.onPress();
         }
     }
 
@@ -374,14 +378,14 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         TitleScreen titlescreen = new TitleScreen();
 
         if (minecraft.level != null) {
-            minecraft.level.disconnect(ClientLevel.DEFAULT_QUIT_MESSAGE);
+            minecraft.level.disconnect();
         }
 
         if (flag) {
-            minecraft.disconnectWithSavingScreen();
+            minecraft.disconnect(new GenericMessageScreen(SAVING_LEVEL));
         }
         else {
-            minecraft.disconnectWithProgressScreen();
+            minecraft.disconnect();
         }
 
         if (flag) {
@@ -725,7 +729,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         @SuppressWarnings({ "unchecked", "rawtypes" })
         protected ConfigurationSectionScreen rebuild() {
             if (list != null) { // this may be called early, skip and wait for init() then
-                list.clearEntries();
+                list.children().clear();
                 boolean hasUndoableElements = false;
 
                 final List<@Nullable Element> elements = new ArrayList<>();
@@ -878,10 +882,10 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                             onChanged(key);
                         }, source.get());
                     }
-                    box.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
+                    box.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                     return;
                 }
-                box.setTextColor(ColorHelper.Colors.YELLOW.toARGB());
+                box.setTextColor(ColorHelper.Colors.YELLOW.toRGBA());
             });
 
             return new Element(getTranslationComponent(key, spec), getTooltipComponent(key, spec), box);
@@ -1114,7 +1118,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                                 onChanged(key);
                             }, source.get());
                         }
-                        box.setTextColor(ColorHelper.Colors.OFFWHITE.toARGB());
+                        box.setTextColor(ColorHelper.Colors.OFFWHITE.toRGBA());
                         return;
                     }
                 }
@@ -1122,7 +1126,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                     // field probably is just empty/partial, ignore that
                 }
 
-                box.setTextColor(ColorHelper.Colors.YELLOW.toARGB());
+                box.setTextColor(ColorHelper.Colors.YELLOW.toRGBA());
             });
 
             return new Element(getTranslationComponent(key, spec), getTooltipComponent(key, spec), box);
@@ -1343,7 +1347,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         @Override
         protected ConfigurationSectionScreen rebuild() {
             if (list != null) { // this may be called early, skip and wait for init() then
-                list.clearEntries();
+                list.children().clear();
 
                 for (int idx = 0; idx < cfgList.size(); idx++) {
                     var entry = cfgList.get(idx);
@@ -1763,15 +1767,6 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                 // TODO I have no idea. Help?
             }
 
-            @Override
-            protected int contentHeight() {
-                return 0; // TODO 1.21.4 no idea
-            }
-
-            @Override
-            protected double scrollRate() {
-                return 4.0; // TODO 1.21.4 no idea
-            }
         }
 
     }
