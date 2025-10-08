@@ -112,6 +112,8 @@ processTestResources {
         expand(project.properties)
     }
 }
+processResources.outputs.upToDateWhen { false }
+processTestResources.outputs.upToDateWhen { false }
 
 publishing {
     repositories {
