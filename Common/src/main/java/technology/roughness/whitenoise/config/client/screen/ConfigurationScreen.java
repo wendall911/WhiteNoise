@@ -24,7 +24,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import net.minecraft.client.gui.screens.GenericMessageScreen;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +33,7 @@ import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig.Entry;
 
 import com.google.common.collect.ImmutableList;
+
 import com.mojang.datafixers.util.Function4;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.serialization.Codec;
@@ -56,6 +56,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.client.gui.screens.GenericMessageScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
@@ -66,6 +67,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 
+import technology.roughness.whitenoise.common.WhiteNoiseModContainer;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
 import technology.roughness.whitenoise.config.WhiteNoiseConfig.Type;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
@@ -74,7 +76,6 @@ import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec.ListValueSpec
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec.Range;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec.RestartType;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec.ValueSpec;
-import technology.roughness.whitenoise.common.WhiteNoiseModContainer;
 import technology.roughness.whitenoise.util.ColorHelper;
 import technology.roughness.whitenoise.util.TranslationUtil;
 
@@ -234,6 +235,8 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         int count = 0;
         MutableComponent modName =
             translationUtil.getWithLiteralFallback(mod.modId() + ".configuration.title", mod.displayName());
+        Minecraft mc = Minecraft.getInstance();
+
         for (final Type type : WhiteNoiseConfig.Type.values()) {
             boolean headerAdded = false;
             Set<WhiteNoiseConfig> configSet = mod.getConfigSet(type);
@@ -243,7 +246,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             }
 
             for (final WhiteNoiseConfig modConfig : configSet) {
-                if (minecraft != null && modConfig != null && modConfig.getModId().equals(mod.modId())) {
+                if (modConfig != null && modConfig.getModId().equals(mod.modId())) {
                     MutableComponent tooltip = Component.empty();
                     final String configTypeString = type.name().toLowerCase(Locale.ROOT);
 
@@ -265,7 +268,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
                     btn = Button.builder(
                         translationUtil.translatable(SPEC_PREFIX + configTypeString),
-                        button -> minecraft.setScreen(
+                        button -> mc.setScreen(
                             sectionScreen.apply(
                                 this,
                                 type,
@@ -280,15 +283,15 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                         btn.active = false;
                         count = 99; // prevent autoClose
                     }
-                    else if (type == Type.SERVER && minecraft.getCurrentServer() != null && !minecraft.isSingleplayer()) {
+                    else if (type == Type.SERVER && mc.getCurrentServer() != null && !mc.isSingleplayer()) {
                         tooltip.append(TOOLTIP_CANNOT_EDIT_THIS_WHILE_ONLINE).append(EMPTY_LINE);
                         btn.active = false;
                         count = 99; // prevent autoClose
                     }
                     else if (type == Type.SERVER
-                            && minecraft.hasSingleplayerServer()
-                            && minecraft.getSingleplayerServer() != null
-                            && minecraft.getSingleplayerServer().isPublished()) {
+                            && mc.hasSingleplayerServer()
+                            && mc.getSingleplayerServer() != null
+                            && mc.getSingleplayerServer().isPublished()) {
                         tooltip.append(TOOLTIP_CANNOT_EDIT_THIS_WHILE_OPEN_TO_LAN).append(EMPTY_LINE);
                         btn.active = false;
                         count = 99; // prevent autoClose
@@ -320,15 +323,14 @@ public final class ConfigurationScreen extends OptionsSubScreen {
     @SuppressWarnings("incomplete-switch")
     @Override
     public void onClose() {
-        if (minecraft == null) {
-            return;
-        }
+        Minecraft mc = Minecraft.getInstance();
+
         translationUtil.finish();
         switch (needsRestart) {
             case GAME -> {
-                minecraft.setScreen(new TooltipConfirmScreen(b -> {
+                mc.setScreen(new TooltipConfirmScreen(b -> {
                     if (b) {
-                        minecraft.stop();
+                        mc.stop();
                     } else {
                         super.onClose();
                     }
@@ -336,8 +338,8 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                 return;
             }
             case WORLD -> {
-                if (minecraft.level != null) {
-                    minecraft.setScreen(
+                if (mc.level != null) {
+                    mc.setScreen(
                         new TooltipConfirmScreen(
                             b -> {
                                 if (b) {
@@ -352,7 +354,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                             },
                             SERVER_RESTART_TITLE,
                             SERVER_RESTART_MESSAGE,
-                            minecraft.isLocalServer() ? RETURN_TO_MENU : CommonComponents.GUI_DISCONNECT,
+                            mc.isLocalServer() ? RETURN_TO_MENU : CommonComponents.GUI_DISCONNECT,
                             RESTART_NO
                         )
                     );
@@ -366,33 +368,30 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
     // direct copy from PauseScreen (which has the best implementation), sadly it's not really accessible
     private void onDisconnect() {
-        if (minecraft == null) {
-            return;
-        }
-
-        boolean flag = this.minecraft.isLocalServer();
-        ServerData serverdata = this.minecraft.getCurrentServer();
+        Minecraft mc = Minecraft.getInstance();
+        boolean flag = mc.isLocalServer();
+        ServerData serverdata = mc.getCurrentServer();
         TitleScreen titlescreen = new TitleScreen();
 
-        if (minecraft.level != null) {
-            minecraft.level.disconnect();
+        if (mc.level != null) {
+            mc.level.disconnect();
         }
 
         if (flag) {
-            minecraft.disconnect(new GenericMessageScreen(SAVING_LEVEL));
+            mc.disconnect(new GenericMessageScreen(SAVING_LEVEL));
         }
         else {
-            minecraft.disconnect();
+            mc.disconnect();
         }
 
         if (flag) {
-            minecraft.setScreen(titlescreen);
+            mc.setScreen(titlescreen);
         }
         else if (serverdata != null && serverdata.isRealm()) {
-            minecraft.setScreen(new RealmsMainScreen(titlescreen));
+            mc.setScreen(new RealmsMainScreen(titlescreen));
         }
         else {
-            minecraft.setScreen(new JoinMultiplayerScreen(titlescreen));
+            mc.setScreen(new JoinMultiplayerScreen(titlescreen));
         }
     }
 
@@ -1156,7 +1155,9 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         @Nullable
         protected Element createSection(final String key, final ValueSpec spec,
                 final UnmodifiableConfig subconfig, final UnmodifiableConfig subsection) {
-            if (minecraft == null || subconfig.isEmpty()) {
+            Minecraft mc = Minecraft.getInstance();
+
+            if (subconfig.isEmpty()) {
                 return null;
             }
 
@@ -1165,7 +1166,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                 getTooltipComponent(key, spec),
                 Button.builder(
                     Component.translatable(SECTION, Component.translatable(SECTION_TEXT)),
-                    button -> minecraft.setScreen(
+                    button -> mc.setScreen(
                         sectionCache.computeIfAbsent(
                             key,
                             k -> new ConfigurationSectionScreen(
@@ -1185,16 +1186,14 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         @Nullable
         protected <T> Element createList(final String key, final ValueSpec spec, final ConfigValue<List<T>> list) {
-            if (minecraft == null) {
-                return null;
-            }
+            Minecraft mc = Minecraft.getInstance();
 
             return new Element(
                 Component.translatable(SECTION, getTranslationComponent(key, spec)),
                 getTooltipComponent(key, spec),
                 Button.builder(
                     Component.translatable(SECTION, Component.translatable(SECTION_TEXT)),
-                    button -> minecraft.setScreen(
+                    button -> mc.setScreen(
                         sectionCache.computeIfAbsent(
                             key,
                             k -> new ConfigurationListScreen<>(
