@@ -47,7 +47,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
-            //artifactId project.archivesBaseName
+            artifactId "whitenoise-${minecraft_version}-fabric"
             version project.version
             from components.java
         }
