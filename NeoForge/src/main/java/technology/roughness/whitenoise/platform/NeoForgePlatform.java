@@ -1,7 +1,7 @@
 package technology.roughness.whitenoise.platform;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 
@@ -15,7 +15,7 @@ import technology.roughness.whitenoise.platform.services.IPlatform;
 public class NeoForgePlatform implements IPlatform {
 
     @Override
-    public ResourceLocation getResourceLocation(Item item) {
+    public Identifier getResourceLocation(Item item) {
         return BuiltInRegistries.ITEM.getKey(item);
     }
 

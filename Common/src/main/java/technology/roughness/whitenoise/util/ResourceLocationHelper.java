@@ -1,29 +1,29 @@
 package technology.roughness.whitenoise.util;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 public class ResourceLocationHelper {
 
-    public static ResourceLocation loc(String modid, String path) {
-        return ResourceLocation.fromNamespaceAndPath(modid, path);
+    public static Identifier loc(String modid, String path) {
+        return Identifier.fromNamespaceAndPath(modid, path);
     }
 
-    public static ResourceLocation parse(String path) {
-        return ResourceLocation.parse(path);
+    public static Identifier parse(String path) {
+        return Identifier.parse(path);
     }
 
-    public static ResourceLocation tryParse(String path) {
-        return ResourceLocation.tryParse(path);
+    public static Identifier tryParse(String path) {
+        return Identifier.tryParse(path);
     }
 
-    public static ResourceLocation getItemStackId(ItemStack stack) {
+    public static Identifier getItemStackId(ItemStack stack) {
         return BuiltInRegistries.ITEM.getKey(stack.getItem());
     }
 
-    public static ResourceLocation getBlockId(Block block) {
+    public static Identifier getBlockId(Block block) {
         return BuiltInRegistries.BLOCK.getKey(block);
     }
 

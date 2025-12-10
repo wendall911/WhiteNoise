@@ -10,7 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -84,7 +84,7 @@ public class AdvancedTooltipEventHandler {
                     );
                 }
 
-                Collection<ResourceLocation> tags = getTags(itemStack.getTags());
+                Collection<Identifier> tags = getTags(itemStack.getTags());
 
                 if (mc.hasShiftDown()) {
                     Block block = Block.byItem(itemStack.getItem());
@@ -135,7 +135,7 @@ public class AdvancedTooltipEventHandler {
         }
     }
 
-    public static <T> Collection<ResourceLocation> getTags(Stream<TagKey<T>> tags) {
+    public static <T> Collection<Identifier> getTags(Stream<TagKey<T>> tags) {
         return tags.map(TagKey::location).collect(Collectors.toUnmodifiableSet());
     }
 

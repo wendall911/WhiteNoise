@@ -19,7 +19,7 @@
 
 package technology.roughness.whitenoise;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class WhiteNoise {
     public static final String MOD_NAME = "WhiteNoise";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
-    public static ResourceLocation prefix(String path) {
+    public static Identifier prefix(String path) {
         return loc(MODID, path);
     }
 

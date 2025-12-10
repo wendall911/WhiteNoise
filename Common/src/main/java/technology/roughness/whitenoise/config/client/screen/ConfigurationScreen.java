@@ -927,11 +927,10 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             public @NotNull Function<OptionInstance<T>, AbstractWidget> createButton(
                     OptionInstance.@NotNull TooltipSupplier<T> tooltip, @NotNull Options options, int x, int y,
                     int width, @NotNull Consumer<T> target) {
-                return optionsInstance -> CycleButton.builder(optionsInstance.toString)
+                return optionsInstance -> CycleButton.builder(optionsInstance.toString, (Supplier<T>) optionsInstance::get)
                         .withValues(CycleButton.ValueListSupplier.create(this.values))
                         .withTooltip(tooltip)
                         .displayOnlyValue()
-                        .withInitialValue(optionsInstance.get())
                         .create(x, y, width, 20, optionsInstance.caption, (source, newValue) -> {
                             optionsInstance.set(newValue);
                             options.save();
