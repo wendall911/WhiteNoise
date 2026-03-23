@@ -84,7 +84,7 @@ public class AdvancedTooltipEventHandler {
                     );
                 }
 
-                Collection<Identifier> tags = getTags(itemStack.getTags());
+                Collection<Identifier> tags = getTags(itemStack.tags());
 
                 if (mc.hasShiftDown()) {
                     Block block = Block.byItem(itemStack.getItem());
@@ -99,7 +99,7 @@ public class AdvancedTooltipEventHandler {
                     }
 
                     if (block != Blocks.AIR) {
-                        tags = getTags(block.defaultBlockState().getTags());
+                        tags = getTags(block.defaultBlockState().tags());
 
                         if (!tags.isEmpty()) {
                             toolTip.add(
@@ -116,7 +116,7 @@ public class AdvancedTooltipEventHandler {
                         Block block = Block.byItem(itemStack.getItem());
 
                         if (block != Blocks.AIR) {
-                            tags = getTags(block.defaultBlockState().getTags());
+                            tags = getTags(block.defaultBlockState().tags());
                         }
                     }
 
