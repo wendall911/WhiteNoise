@@ -6,7 +6,7 @@ pluginManagement {
             forRepository {
                 maven {
                     name = 'Fabric'
-                    url = uri("https://maven.fabricmc.net")
+                    url = uri('https://maven.fabricmc.net')
                 }
             }
             filter {
