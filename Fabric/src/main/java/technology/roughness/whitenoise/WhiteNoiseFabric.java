@@ -37,7 +37,7 @@ public class WhiteNoiseFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PayloadTypeRegistry.playS2C()
+        PayloadTypeRegistry.clientboundPlay()
                 .register(WhiteNoiseConfigPayload.TYPE, WhiteNoiseConfigPayload.STREAM_CODEC);
         ServerLifecycleEvents.SERVER_STARTING.register(WhiteNoiseConfigEvents::onLoadServer);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> WhiteNoiseConfigEvents.onUnloadServer());
