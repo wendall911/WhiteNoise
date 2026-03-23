@@ -10,7 +10,7 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 
     compileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
-    localRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
+    runtimeOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
 
     implementation group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
     implementation group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
