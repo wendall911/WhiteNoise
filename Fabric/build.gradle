@@ -1,18 +1,16 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
 }
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings(loom.layered {
-        officialMojangMappings()
-    })
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 
-    modCompileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
-    modLocalRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
+    compileOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
+    localRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
 
     implementation group: 'com.electronwill.night-config', name: 'core', version: "${nightconfig_version}"
     implementation group: 'com.electronwill.night-config', name: 'toml', version: "${nightconfig_version}"
@@ -24,9 +22,6 @@ loom {
     def aw = project(":Common").file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
-    }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
     }
     runs {
         client {
