@@ -33,10 +33,10 @@ repositories {
 
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
-['apiElements', 'runtimeElements', 'sourcesElements'].each { variant ->
+['apiElements', 'sourcesElements'].each { variant ->
     configurations."$variant".outgoing {
-        capability("$group:$mod_id-${minecraft_version}-${project.name}:$version".toLowerCase())
         capability("$group:$mod_id:$version")
+        capability("$group:$mod_id-${minecraft_version}-${project.name}:$version".toLowerCase())
     }
     publishing.publications.configureEach {
         suppressPomMetadataWarningsFor(variant)
