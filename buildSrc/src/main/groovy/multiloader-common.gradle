@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'idea'
 }
 
 base {
@@ -35,8 +36,8 @@ repositories {
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
 ['apiElements', 'sourcesElements'].each { variant ->
     configurations."$variant".outgoing {
-        capability("$group:$mod_id:$version")
         capability("$group:$mod_id-${minecraft_version}-${project.name}:$version".toLowerCase())
+        capability("$group:$mod_id:$version")
     }
     publishing.publications.configureEach {
         suppressPomMetadataWarningsFor(variant)
