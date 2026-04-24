@@ -59,6 +59,7 @@ public class WhiteNoiseClientNeoForge {
 
             if (modConfigs != null && !modConfigs.isEmpty()) {
                 int count = modConfigs.values().stream().mapToInt(Set::size).sum();
+
                 WhiteNoise.LOGGER.info("Registering config screens for mod {} with {} config(s)", modId, count);
                 modContainer.registerExtensionPoint(IConfigScreenFactory.class, new IConfigScreenFactory() {
                     @NotNull

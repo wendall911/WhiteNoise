@@ -8,6 +8,9 @@ import net.minecraft.world.item.ArmorItem;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import technology.roughness.whitenoise.WhiteNoise;
+import technology.roughness.whitenoise.config.WhiteNoiseConfig.Type;
+
 public class WhiteNoiseTestConfig {
 
     public static final WhiteNoiseConfigSpec CLIENT_SPEC;
@@ -19,19 +22,31 @@ public class WhiteNoiseTestConfig {
 
     static {
         Pair<Test, WhiteNoiseConfigSpec> testSpecPair =
-                new WhiteNoiseConfigSpec.Builder().configure(Test::new);
+                new WhiteNoiseConfigSpec.Builder().configure((builder) -> new Test(builder, Type.CLIENT));
         CLIENT_SPEC = testSpecPair.getRight();
         CLIENT_TEST = testSpecPair.getLeft();
 
         testSpecPair =
-                new WhiteNoiseConfigSpec.Builder().configure(Test::new);
+                new WhiteNoiseConfigSpec.Builder().configure((builder) -> new Test(builder, Type.COMMON));
         COMMON_SPEC = testSpecPair.getRight();
         COMMON_TEST = testSpecPair.getLeft();
 
         testSpecPair =
-                new WhiteNoiseConfigSpec.Builder().configure(Test::new);
+                new WhiteNoiseConfigSpec.Builder().configure((builder) -> new Test(builder, Type.SERVER));
         SERVER_SPEC = testSpecPair.getRight();
         SERVER_TEST = testSpecPair.getLeft();
+    }
+
+    public static void init(boolean isReloading) {
+        WhiteNoise.LOGGER.warn("WhiteNoiseTestConfig init test {}", isReloading);
+    }
+
+    public static void commonStartup() {
+        WhiteNoise.LOGGER.warn("WhiteNoiseTestConfig commonStartup test.");
+    }
+
+    public static void serverStartup() {
+        WhiteNoise.LOGGER.warn("WhiteNoiseTestConfig serverStartup test.");
     }
 
     public static class Test {
@@ -53,15 +68,15 @@ public class WhiteNoiseTestConfig {
         private static final Predicate<Object> resourceLocationValidator = s -> s instanceof String
             && ((String) s).matches("[a-z]+[:]{1}[a-z_]+");
 
-        public Test(WhiteNoiseConfigSpec.Builder builder) {
+        public Test(WhiteNoiseConfigSpec.Builder builder, WhiteNoiseConfig.Type type) {
 
-            this.intValue = builder.comment("Integer Value Comment").translation("gui.intValue")
+            this.intValue = requireReload(builder, type).comment("Integer Value Comment (Requires Reload)").translation("gui.intValue")
                     .defineInRange("intVal", 0, -10, 10);
             this.doubleValue = builder.comment("Double Value Comment").translation("gui.doubleValue")
                     .defineInRange("doubleVal", 0.0D, -10.0D, 10.0D);
-            this.booleanValue = builder.comment("B\nNew Line").define("booleanValue", false);
-            this.booleanValue1 = builder.comment("Boolean Value Comment").define("booleanValue1", false);
-            this.booleanValue2 = builder.comment("Boolean Value Comment").define("booleanValue2", false);
+            this.booleanValue = requireReload(builder, type).comment("B\nNew Line (Requires Reload)").define("booleanValue", false);
+            this.booleanValue1 = requireReload(builder, type).comment("Boolean Value Comment (Requires Reload)").define("booleanValue1", false);
+            this.booleanValue2 = requireReload(builder, type).comment("Boolean Value Comment (Requires Reload)").define("booleanValue2", false);
             this.longValue =
                     builder.comment("Long Value Comment").defineInRange("longValue", 0L, -10L, 10L);
             this.stringValue1 =
@@ -90,6 +105,16 @@ public class WhiteNoiseTestConfig {
                     Arrays.asList("minecraft:diamond", "minecraft:emerald", "minecraft:stone"),
                     resourceLocationValidator);
             builder.pop();
+        }
+
+        private WhiteNoiseConfigSpec.Builder requireReload(WhiteNoiseConfigSpec.Builder builder, WhiteNoiseConfig.Type type) {
+            switch (type) {
+                case CLIENT -> builder.clientRestart();
+                case COMMON -> builder.worldRestart();
+                case SERVER -> builder.gameRestart();
+            }
+
+            return builder;
         }
 
     }

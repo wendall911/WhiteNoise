@@ -41,7 +41,7 @@ public class WhiteNoiseConfig {
     private final EnumMap<InstanceType, CommentedConfig> configData =
             new EnumMap<>(InstanceType.class);
     private final List<BiConsumer<WhiteNoiseConfig, Boolean>> loadListeners = new ArrayList<>();
-    private final List<Consumer<WhiteNoiseConfig>> saveListeners = new ArrayList<>();
+    private final List<Consumer<WhiteNoiseConfig>> startupListeners = new ArrayList<>();
 
     public WhiteNoiseConfig(Type type, WhiteNoiseConfigSpec spec, String modId, String fileName) {
         this.type = type;
@@ -114,6 +114,16 @@ public class WhiteNoiseConfig {
         this.loadListeners.add(listener);
     }
 
+    public void addStartupListener(Consumer<WhiteNoiseConfig> listener) {
+        this.startupListeners.add(listener);
+    }
+
+    public void fireStartupEvent() {
+        for (Consumer<WhiteNoiseConfig> listener : this.startupListeners) {
+            listener.accept(this);
+        }
+    }
+
     public void fireLoad(boolean isReloading) {
         for (BiConsumer<WhiteNoiseConfig, Boolean> loadListener : this.loadListeners) {
             loadListener.accept(this, isReloading);
@@ -141,4 +151,3 @@ public class WhiteNoiseConfig {
     }
 
 }
-

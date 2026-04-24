@@ -134,9 +134,18 @@ public class WhiteNoiseConfigTracker {
 
                 config.setConfigData(type.get(), configData, false);
                 config.fireLoad(false);
+                config.fireStartupEvent();
                 config.save(type.get());
             }
         });
+    }
+
+    public WhiteNoiseConfig getConfig(String filename) {
+        if (this.files.containsKey(filename)) {
+            return this.files.get(filename);
+        }
+
+        return null;
     }
 
     void unloadServerConfigs() {
@@ -193,6 +202,7 @@ public class WhiteNoiseConfigTracker {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void tryDefaultConfigLoad(WhiteNoiseConfig modConfig) {
         String fileName = modConfig.getFileName();
         Path path = Services.CONFIG.getBackwardsCompatiblePath().resolve(fileName);
@@ -300,4 +310,3 @@ public class WhiteNoiseConfigTracker {
     }
 
 }
-
