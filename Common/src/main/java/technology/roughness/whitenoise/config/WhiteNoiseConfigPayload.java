@@ -1,6 +1,6 @@
 package technology.roughness.whitenoise.config;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -33,7 +33,7 @@ public class WhiteNoiseConfigPayload implements CustomPacketPayload {
         this(buf.readByteArray(), buf.readUtf());
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;

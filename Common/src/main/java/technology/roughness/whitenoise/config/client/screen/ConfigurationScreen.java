@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -25,8 +26,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
@@ -69,7 +70,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 
-import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 import technology.roughness.whitenoise.config.WhiteNoiseConfig;
@@ -81,6 +81,7 @@ import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec.Range;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec.RestartType;
 import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec.ValueSpec;
 import technology.roughness.whitenoise.common.WhiteNoiseModContainer;
+import technology.roughness.whitenoise.config.WhiteNoiseConfigTracker;
 import technology.roughness.whitenoise.util.ColorHelper;
 import technology.roughness.whitenoise.util.TranslationUtil;
 
@@ -92,7 +93,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         }
 
         @Override
-        protected void addButtons(@NotNull LinearLayout layout) {
+        protected void addButtons(@NonNull LinearLayout layout) {
             super.addButtons(layout);
             if (this.noButton != null) {
                 this.noButton.setTooltip(Tooltip.create(RESTART_NO_TOOLTIP));
@@ -200,6 +201,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
     private final Function4<ConfigurationScreen, WhiteNoiseConfig.Type, WhiteNoiseConfig, Component, Screen> sectionScreen;
 
     public RestartType needsRestart = RestartType.NONE;
+    private static final Set<String> changedFiles = new HashSet<>();
     // If there is only one config type (and it can be edited, we show that
     // instantly on the way "down" and want to close on the way "up".
     // But when returning from the restart/reload confirmation screens, we need to stay open.
@@ -325,6 +327,17 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         Minecraft mc = Minecraft.getInstance();
 
         translationUtil.finish();
+
+        if (!changedFiles.isEmpty()) {
+            for (String filename : changedFiles) {
+                WhiteNoiseConfig config = WhiteNoiseConfigTracker.INSTANCE.getConfig(filename);
+
+                if (config != null) {
+                    config.fireLoad(true);
+                }
+            }
+        }
+
         switch (needsRestart) {
             case GAME -> {
                 mc.setScreen(new TooltipConfirmScreen(b -> {
@@ -397,11 +410,11 @@ public final class ConfigurationScreen extends OptionsSubScreen {
     /**
      * A UI screen that presents a single section of configuration values and
      allows the user to edit them, including an unlimited undo system and reset to default.<p>
-     * 
+     *
      * This class is automatically used if you use NeoForge's generic configuration UI, see {@link ConfigurationScreen}.<p>
-     * 
+     *
      * If you have special needs, you can subclass this class to achieve the desired behaviour. For example:<ul>
-     * 
+     *
      * Note: This class subclasses vanilla's {@link OptionsSubScreen} and
      * inherits some behaviour that is not needed. For example, we need to pass the vanilla
      * <code>options</code> to our superclass' constructor.
@@ -505,7 +518,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * Constructs a new section screen for the top-most section in a {@link WhiteNoiseConfig}.
-         * 
+         *
          * @param parent    The screen to return to when the user presses escape or the "Done" button.
          *                  If this is a {@link ConfigurationScreen}, additional information is passed before closing.
          * @param type      The {@link Type} this configuration is for. Only used to generate the title of the screen.
@@ -518,7 +531,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * Constructs a new section screen for the top-most section in a {@link WhiteNoiseConfig}.
-         * 
+         *
          * @param parent    The screen to return to when the user presses escape or the "Done" button.
          *                  If this is a {@link ConfigurationScreen}, additional information is passed before closing.
          * @param type      The {@link Type} this configuration is for. Only used to generate the title of the screen.
@@ -533,7 +546,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * Constructs a new section screen for a sub-section of a config.
-         * 
+         *
          * @param parentContext The {@link Context} object of the parent.
          * @param parent        The screen to return to when the user presses escape or the "Done" button.
          *                      If this is a {@link ConfigurationSectionScreen}, additional information is passed before closing.
@@ -705,12 +718,15 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * This is called whenever a value is changed and the change is submitted to the appropriate {@link ConfigSpec}.
-         * 
+         *
          * @param key The key of the changed configuration. To get an absolute key, use {@link Context#makeKeyList(String)}.
          */
         protected void onChanged(final String key) {
-            changed = true;
             final ValueSpec valueSpec = getValueSpec(key);
+
+            changed = true;
+            changedFiles.add(context.modConfig.getFileName());
+
             if (valueSpec != null) {
                 needsRestart = needsRestart.with(valueSpec.restartType());
             }
@@ -818,7 +834,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * Override this to add additional configuration elements to the list.
-         * 
+         *
          * @return A collection of {@link Element}.
          */
         protected Collection<? extends Element> createSyntheticValues() {
@@ -889,9 +905,9 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         /**
          * Called when an entry is encountered that is neither a {@link ConfigValue} nor a section.
          * Override this to produce whatever UI elements are appropriate for this object.<p>
-         * 
+         *
          * Note that this case is unusual and shouldn't happen unless someone injected something into the config system.
-         * 
+         *
          * @param key   The key of the entry.
          * @param value The entry itself.
          * @return null if no UI element should be added or an {@link Element} to be added to the UI.
@@ -904,7 +920,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         /**
          * Called when a {@link ConfigValue} is found that has an unknown data type.
          * Override this to produce whatever UI elements are appropriate for this object.<p>
-         * 
+         *
          * @param key   The key of the entry.
          * @param value The entry itself.
          * @return null if no UI element should be added or an {@link Element} to be added to the UI.
@@ -926,9 +942,9 @@ public final class ConfigurationScreen extends OptionsSubScreen {
          */
         public record Custom<T>(List<T> values) implements OptionInstance.ValueSet<T> {
             @Override
-            public @NotNull Function<OptionInstance<T>, AbstractWidget> createButton(
-                    OptionInstance.@NotNull TooltipSupplier<T> tooltip, @NotNull Options options, int x, int y,
-                    int width, @NotNull Consumer<T> target) {
+            public @NonNull Function<OptionInstance<T>, AbstractWidget> createButton(
+                    OptionInstance.@NonNull TooltipSupplier<T> tooltip, @NonNull Options options, int x, int y,
+                    int width, @NonNull Consumer<T> target) {
                 return optionsInstance -> CycleButton.builder(optionsInstance.toString, (Supplier<T>) optionsInstance::get)
                         .withValues(CycleButton.ValueListSupplier.create(this.values))
                         .withTooltip(tooltip)
@@ -941,7 +957,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             }
 
             @Override
-            public @NotNull Optional<T> validateValue(@NotNull T value) {
+            public @NonNull Optional<T> validateValue(@NonNull T value) {
                 return values.contains(value) ? Optional.of(value) : Optional.empty();
             }
 
@@ -1318,9 +1334,9 @@ public final class ConfigurationScreen extends OptionsSubScreen {
     /**
      * A UI screen that presents a list-type configuration value and allows the
      * user to edit it, including an unlimited undo system and reset to default.<p>
-     * 
+     *
      * This class is automatically used if you use NeoForge's generic configuration UI, see {@link ConfigurationScreen}.<p>
-     * 
+     *
      */
     public static class ConfigurationListScreen<T> extends ConfigurationSectionScreen {
         protected final String key;
@@ -1385,7 +1401,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * Creates a button to add a new element to the end of the list and adds it to the UI.<p>
-         * 
+         *
          * Override this if you want a different button or want to add more elements.
          */
         @SuppressWarnings("unchecked")
@@ -1428,9 +1444,9 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * Creates a new widget to label a list value and provide manipulation buttons for it.<p>
-         * 
+         *
          * Override this if you want different labels/buttons.
-         * 
+         *
          * @param idx The index into the list.
          * @return An {@link AbstractWidget} to be rendered in the left column of the options screen
          */
@@ -1448,17 +1464,17 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         /**
          * Called when a list element is found that has an unknown or unsupported data type. Override this to produce whatever
          * UI elements are appropriate for this object.<p>
-         * 
+         *
          * Note that all types of elements that can be read from the config file as part of a list are already supported. You
          * only need this if you manipulate the contents of the list after it has been loaded.<p>
-         * 
+         *
          * If this returns null, no row will be shown on the screen, but the up/down buttons will still see your element.
          * Which means that the user will see no change when moving another element over the hidden line. Consider returning
          * a {@link StringWidget} as a placeholder instead.<p>
-         * 
+         *
          * Do <em>not</em> capture {@link #cfgList} here or in another create*Value() method. The undo/reset system will
          * replace the list, so you need to always access the field. You can (and should) capture the index.
-         * 
+         *
          * @param idx   The index into the list.
          * @param entry The entry itself.
          * @return null if this element should be skipped or an {@link Element} to be added to the UI.
@@ -1640,9 +1656,9 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         /**
          * A widget to be used as a label in a list of configuration values.<p>
-         * 
+         *
          * It includes buttons for "move element up", "move element down", and "delete element" as well as a label.
-         * 
+         *
          */
         public class ListLabelWidget extends AbstractContainerWidget {
             protected final Button upButton = Button.builder(MOVE_LIST_ELEMENT_UP, this::up).build();
@@ -1729,7 +1745,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             }
 
             @Override
-            public @NotNull List<? extends GuiEventListener> children() {
+            public @NonNull List<? extends GuiEventListener> children() {
                 return List.of(upButton, label, downButton, delButton);
             }
 
@@ -1758,7 +1774,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             }
 
             @Override
-            protected void updateWidgetNarration(final @NotNull NarrationElementOutput pNarrationElementOutput) {
+            protected void updateWidgetNarration(final @NonNull NarrationElementOutput pNarrationElementOutput) {
                 // TODO I have no idea. Help?
             }
 

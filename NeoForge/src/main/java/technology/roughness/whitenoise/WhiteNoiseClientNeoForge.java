@@ -22,7 +22,7 @@ package technology.roughness.whitenoise;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -59,11 +59,12 @@ public class WhiteNoiseClientNeoForge {
 
             if (modConfigs != null && !modConfigs.isEmpty()) {
                 int count = modConfigs.values().stream().mapToInt(Set::size).sum();
+
                 WhiteNoise.LOGGER.info("Registering config screens for mod {} with {} config(s)", modId, count);
                 modContainer.registerExtensionPoint(IConfigScreenFactory.class, new IConfigScreenFactory() {
-                    @NotNull
+                    @NonNull
                     @Override
-                    public Screen createScreen(@NotNull ModContainer modContainer1, @NotNull Screen screen) {
+                    public Screen createScreen(@NonNull ModContainer modContainer1, @NonNull Screen screen) {
                         return new ConfigurationScreen(wnModContainer, screen);
                     }
                 });

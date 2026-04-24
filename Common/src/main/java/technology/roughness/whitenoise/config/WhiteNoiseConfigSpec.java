@@ -37,8 +37,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -893,6 +893,11 @@ public class WhiteNoiseConfigSpec {
             return this;
         }
 
+        public Builder gameRestart() {
+            context.gameRestart();
+            return this;
+        }
+
         public Builder clientRestart() {
             context.clientRestart();
             return this;
@@ -931,7 +936,7 @@ public class WhiteNoiseConfigSpec {
                         "Attempted to pop " + count + " elements when we only had: " + currentPath);
             }
             for (int x = 0; x < count; x++) {
-                currentPath.remove(currentPath.size() - 1);
+                currentPath.removeLast();
             }
 
             return this;
@@ -975,10 +980,11 @@ public class WhiteNoiseConfigSpec {
 
     private static class BuilderContext {
 
-        private @NotNull String[] comment = new String[0];
+        private @NonNull String[] comment = new String[0];
         private String langKey;
         private Range<?> range;
         private boolean worldRestart = false;
+        private boolean gameRestart = false;
         private boolean clientRestart = false;
         private Class<?> clazz;
 
@@ -1025,6 +1031,14 @@ public class WhiteNoiseConfigSpec {
             return this.worldRestart;
         }
 
+        public void gameRestart() {
+            this.gameRestart = true;
+        }
+
+        public boolean needsGameRestart() {
+            return this.gameRestart || needsClientRestart();
+        }
+
         public void clientRestart() {
             this.clientRestart = true;
         }
@@ -1046,6 +1060,7 @@ public class WhiteNoiseConfigSpec {
             validate(langKey, "Non-null translation key when null expected");
             validate(range, "Non-null range when null expected");
             validate(worldRestart, "Dangling world restart value set to true");
+            validate(gameRestart, "Dangling game restart value set to true");
             validate(clientRestart, "Dangling client restart value set to true");
         }
 
@@ -1167,6 +1182,7 @@ public class WhiteNoiseConfigSpec {
         private final String langKey;
         private final Range<?> range;
         private final boolean worldRestart;
+        private final boolean gameRestart;
         private final Class<?> clazz;
         private final Supplier<?> supplier;
         private final Predicate<Object> validator;
@@ -1179,6 +1195,7 @@ public class WhiteNoiseConfigSpec {
             this.langKey = context.getTranslationKey();
             this.range = context.getRange();
             this.worldRestart = context.needsWorldRestart();
+            this.gameRestart = context.needsGameRestart();
             this.clazz = context.getClazz();
             this.supplier = supplier;
             this.validator = validator;
@@ -1199,6 +1216,10 @@ public class WhiteNoiseConfigSpec {
 
         public boolean needsWorldRestart() {
             return this.worldRestart;
+        }
+
+        public boolean needsGameRestart() {
+            return this.gameRestart;
         }
 
         public Class<?> getClazz() {
@@ -1228,6 +1249,9 @@ public class WhiteNoiseConfigSpec {
         public RestartType restartType() {
             if (needsWorldRestart()) {
                 return RestartType.WORLD;
+            }
+            else if (needsGameRestart()) {
+                return RestartType.GAME;
             }
 
             return RestartType.NONE;

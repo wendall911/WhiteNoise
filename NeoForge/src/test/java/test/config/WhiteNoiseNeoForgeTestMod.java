@@ -29,12 +29,16 @@ import technology.roughness.whitenoise.config.WhiteNoiseTestConfig;
 public class WhiteNoiseNeoForgeTestMod {
 
     public WhiteNoiseNeoForgeTestMod() {
-        WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.CLIENT, WhiteNoiseTestConfig.CLIENT_SPEC,
+        WhiteNoiseConfig clientConfig = WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.CLIENT, WhiteNoiseTestConfig.CLIENT_SPEC,
                 "whitenoisetest");
-        WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.COMMON, WhiteNoiseTestConfig.COMMON_SPEC,
-                "whitenoisetest");
-        WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.SERVER, WhiteNoiseTestConfig.SERVER_SPEC,
-                "whitenoisetest");
+        WhiteNoiseConfig commonConfig = WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.COMMON, WhiteNoiseTestConfig.COMMON_SPEC,
+            "whitenoisetest");
+        WhiteNoiseConfig serverConfig = WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.SERVER, WhiteNoiseTestConfig.SERVER_SPEC,
+            "whitenoisetest");
+
+        clientConfig.addLoadListener((config, isReloading) -> WhiteNoiseTestConfig.init(isReloading));
+        commonConfig.addStartupListener(config -> WhiteNoiseTestConfig.commonStartup());
+        commonConfig.addStartupListener(config -> WhiteNoiseTestConfig.serverStartup());
     }
 
 }

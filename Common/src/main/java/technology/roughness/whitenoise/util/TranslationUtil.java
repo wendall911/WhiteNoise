@@ -3,7 +3,7 @@ package technology.roughness.whitenoise.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.datafixers.util.Pair;
 

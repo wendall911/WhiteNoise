@@ -27,7 +27,7 @@ import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
@@ -41,7 +41,7 @@ public class WhiteNoiseConfig {
     private final EnumMap<InstanceType, CommentedConfig> configData =
             new EnumMap<>(InstanceType.class);
     private final List<BiConsumer<WhiteNoiseConfig, Boolean>> loadListeners = new ArrayList<>();
-    private final List<Consumer<WhiteNoiseConfig>> saveListeners = new ArrayList<>();
+    private final List<Consumer<WhiteNoiseConfig>> startupListeners = new ArrayList<>();
 
     public WhiteNoiseConfig(Type type, WhiteNoiseConfigSpec spec, String modId, String fileName) {
         this.type = type;
@@ -86,7 +86,7 @@ public class WhiteNoiseConfig {
         return this.getConfigData(InstanceType.GLOBAL);
     }
 
-    public void setConfigData(InstanceType type, @NotNull final CommentedConfig configData, boolean create) {
+    public void setConfigData(InstanceType type, @NonNull final CommentedConfig configData, boolean create) {
         this.configData.put(type, configData);
         this.getSpec().setConfigData(configData, create);
     }
@@ -112,6 +112,16 @@ public class WhiteNoiseConfig {
 
     public void addLoadListener(BiConsumer<WhiteNoiseConfig, Boolean> listener) {
         this.loadListeners.add(listener);
+    }
+
+    public void addStartupListener(Consumer<WhiteNoiseConfig> listener) {
+        this.startupListeners.add(listener);
+    }
+
+    public void fireStartupEvent() {
+        for (Consumer<WhiteNoiseConfig> listener : this.startupListeners) {
+            listener.accept(this);
+        }
     }
 
     public void fireLoad(boolean isReloading) {
