@@ -29,6 +29,7 @@ public class Services extends ServicesBase {
     public static final IConfigHelper CONFIG = load(WhiteNoise.LOGGER, IConfigHelper.class);
     public static final IClientPlatform CLIENT_PLATFORM = load(WhiteNoise.LOGGER, IClientPlatform.class);
     public static final IPlatform WN_PLATFORM = load(WhiteNoise.LOGGER, IPlatform.class);
+    public static final IPlatform PLATFORM = WN_PLATFORM;
 
 }
 
