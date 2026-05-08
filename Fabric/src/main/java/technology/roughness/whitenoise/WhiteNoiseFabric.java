@@ -43,7 +43,7 @@ public class WhiteNoiseFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> WhiteNoiseConfigEvents.onUnloadServer());
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer serverPlayer = handler.getPlayer();
-            List<WhiteNoiseConfigPayload> configData = WhiteNoiseConfigNetwork.getConfigSync();
+            List<WhiteNoiseConfigPayload> configData = WhiteNoiseConfigNetwork.getServerConfigSync();
 
             if (!configData.isEmpty()) {
                 for (WhiteNoiseConfigPayload configDatum : configData) {

@@ -42,6 +42,7 @@ public class WhiteNoiseConfig {
             new EnumMap<>(InstanceType.class);
     private final List<BiConsumer<WhiteNoiseConfig, Boolean>> loadListeners = new ArrayList<>();
     private final List<Consumer<WhiteNoiseConfig>> startupListeners = new ArrayList<>();
+    private boolean sync = true;
 
     public WhiteNoiseConfig(Type type, WhiteNoiseConfigSpec spec, String modId, String fileName) {
         this.type = type;
@@ -89,6 +90,14 @@ public class WhiteNoiseConfig {
     public void setConfigData(InstanceType type, @NonNull final CommentedConfig configData, boolean create) {
         this.configData.put(type, configData);
         this.getSpec().setConfigData(configData, create);
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
+    public boolean sync() {
+        return this.sync;
     }
 
     public void clearServerConfigData() {

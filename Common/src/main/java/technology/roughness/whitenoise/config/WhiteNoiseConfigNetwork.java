@@ -30,8 +30,8 @@ import net.minecraft.network.FriendlyByteBuf;
 
 public class WhiteNoiseConfigNetwork {
 
-    public static List<WhiteNoiseConfigPayload> getConfigSync() {
-        Map<String, byte[]> configData = WhiteNoiseConfigTracker.INSTANCE.getConfigSync();
+    public static List<WhiteNoiseConfigPayload> getServerConfigSync() {
+        Map<String, byte[]> configData = WhiteNoiseConfigTracker.INSTANCE.getServerConfigSync();
 
         if (configData.isEmpty()) {
             return new ArrayList<>();
