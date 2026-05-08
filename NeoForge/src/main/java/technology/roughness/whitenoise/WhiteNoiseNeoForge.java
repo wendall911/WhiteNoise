@@ -54,9 +54,13 @@ public class WhiteNoiseNeoForge {
     }
 
     private void registerPayloadHandler(final RegisterPayloadHandlersEvent evt) {
-        evt.registrar(WhiteNoise.MODID)
-            .playToClient(WhiteNoiseConfigPayload.TYPE, WhiteNoiseConfigPayload.STREAM_CODEC,
-                WhiteNoiseClientPayloadHandler.getInstance()::handleData);
+        List<WhiteNoiseConfigPayload> configData = WhiteNoiseConfigNetwork.getServerConfigSync();
+
+        if (!configData.isEmpty()) {
+            evt.registrar(WhiteNoise.MODID)
+                .playToClient(WhiteNoiseConfigPayload.TYPE, WhiteNoiseConfigPayload.STREAM_CODEC,
+                    WhiteNoiseClientPayloadHandler.getInstance()::handleData).optional();
+        }
     }
 
     private void loadConfigs(final NewRegistryEvent evt) {
@@ -79,7 +83,7 @@ public class WhiteNoiseNeoForge {
         Player player = evt.getEntity();
 
         if (player instanceof ServerPlayer serverPlayer) {
-            List<WhiteNoiseConfigPayload> configData = WhiteNoiseConfigNetwork.getConfigSync();
+            List<WhiteNoiseConfigPayload> configData = WhiteNoiseConfigNetwork.getServerConfigSync();
 
             if (!configData.isEmpty()) {
                 for (WhiteNoiseConfigPayload configDatum : configData) {
