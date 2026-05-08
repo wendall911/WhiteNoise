@@ -290,9 +290,10 @@ public class WhiteNoiseConfigTracker {
         }
     }
 
-    public Map<String, byte[]> getConfigSync() {
-        return this.configsByType.get(WhiteNoiseConfig.Type.SERVER).stream().collect(
-                Collectors.toMap(WhiteNoiseConfig::getFileName, file -> {
+    public Map<String, byte[]> getServerConfigSync() {
+        return this.configsByType.get(WhiteNoiseConfig.Type.SERVER).stream()
+            .filter(WhiteNoiseConfig::sync)
+            .collect(Collectors.toMap(WhiteNoiseConfig::getFileName, file -> {
                     try {
                         return Files.readAllBytes(file.getFullPath());
                     }
