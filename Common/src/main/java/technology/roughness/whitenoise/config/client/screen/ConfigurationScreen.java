@@ -263,7 +263,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
                     btn = Button.builder(
                         translationUtil.translatable(SPEC_PREFIX + configTypeString),
-                        button -> mc.setScreen(
+                        button -> mc.gui.setScreen(
                             sectionScreen.apply(
                                 this,
                                 type,
@@ -278,7 +278,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                         btn.active = false;
                         count = 99; // prevent autoClose
                     }
-                    else if (type == Type.SERVER && mc.getCurrentServer() != null && !mc.isSingleplayer()) {
+                    else if (type == Type.SERVER && mc.getCurrentServer() != null && !mc.hasSingleplayerServer()) {
                         tooltip.append(TOOLTIP_CANNOT_EDIT_THIS_WHILE_ONLINE).append(EMPTY_LINE);
                         btn.active = false;
                         count = 99; // prevent autoClose
@@ -340,7 +340,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
 
         switch (needsRestart) {
             case GAME -> {
-                mc.setScreen(new TooltipConfirmScreen(b -> {
+                mc.gui.setScreen(new TooltipConfirmScreen(b -> {
                     if (b) {
                         mc.stop();
                     } else {
@@ -351,7 +351,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             }
             case WORLD -> {
                 if (mc.level != null) {
-                    mc.setScreen(
+                    mc.gui.setScreen(
                         new TooltipConfirmScreen(
                             b -> {
                                 if (b) {
@@ -397,13 +397,13 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         }
 
         if (flag) {
-            mc.setScreen(titlescreen);
+            mc.gui.setScreen(titlescreen);
         }
         else if (serverdata != null && serverdata.isRealm()) {
-            mc.setScreen(new RealmsMainScreen(titlescreen));
+            mc.gui.setScreen(new RealmsMainScreen(titlescreen));
         }
         else {
-            mc.setScreen(new JoinMultiplayerScreen(titlescreen));
+            mc.gui.setScreen(new JoinMultiplayerScreen(titlescreen));
         }
     }
 
@@ -944,15 +944,15 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             @Override
             public @NonNull Function<OptionInstance<T>, AbstractWidget> createButton(
                     OptionInstance.@NonNull TooltipSupplier<T> tooltip, @NonNull Options options, int x, int y,
-                    int width, @NonNull Consumer<T> target) {
+                    int width, OptionInstance.ValueUpdateListener<? super T> target) {
                 return optionsInstance -> CycleButton.builder(optionsInstance.toString, (Supplier<T>) optionsInstance::get)
                         .withValues(CycleButton.ValueListSupplier.create(this.values))
                         .withTooltip(tooltip)
                         .displayOnlyValue()
-                        .create(x, y, width, 20, optionsInstance.caption, (source, newValue) -> {
+                        .create(x, y, width, 20, optionsInstance.caption, (_, newValue) -> {
                             optionsInstance.set(newValue);
                             options.save();
-                            target.accept(newValue);
+                            target.valueChanged(newValue);
                         });
             }
 
@@ -1182,7 +1182,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                 getTooltipComponent(key, spec),
                 Button.builder(
                     Component.translatable(SECTION, Component.translatable(SECTION_TEXT)),
-                    button -> mc.setScreen(
+                    button -> mc.gui.setScreen(
                         sectionCache.computeIfAbsent(
                             key,
                             k -> new ConfigurationSectionScreen(
@@ -1209,7 +1209,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
                 getTooltipComponent(key, spec),
                 Button.builder(
                     Component.translatable(SECTION, Component.translatable(SECTION_TEXT)),
-                    button -> mc.setScreen(
+                    button -> mc.gui.setScreen(
                         sectionCache.computeIfAbsent(
                             key,
                             k -> new ConfigurationListScreen<>(
@@ -1395,6 +1395,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             return this;
         }
 
+        @Override
         protected boolean isAnyNondefault() {
             return !cfgList.equals(valueList.getDefault());
         }
@@ -1624,6 +1625,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
             super.extractRenderState(graphics, mouseX, mouseY, a);
         }
 
+        @Override
         protected void onChanged(final String key) {
             changed = true;
             // parent's onChanged() will be fired when we actually assign the changed list. For now,
@@ -1631,6 +1633,7 @@ public final class ConfigurationScreen extends OptionsSubScreen {
         }
 
         @SuppressWarnings("unchecked")
+        @Override
         protected void createResetButton() {
             ValueSpec valueSpec = getValueSpec(key);
 

@@ -22,8 +22,9 @@ public class TranslationUtil {
 
     public MutableComponent getWithLiteralFallback(final String translationKey, final String fallback) {
         MutableComponent component = Component.empty();
+        String translated = I18n.get(translationKey);
 
-        if (I18n.exists(translationKey)) {
+        if (!translated.equals(translationKey)) {
             component.append(Component.translatable(translationKey));
         }
         else {
@@ -71,7 +72,9 @@ public class TranslationUtil {
     }
 
     public boolean exists(final String translationKey) {
-        if (!I18n.exists(translationKey)) {
+        String translated = I18n.get(translationKey);
+
+        if (translated.equals(translationKey)) {
             untranslatables.add(translationKey);
 
             return false;
